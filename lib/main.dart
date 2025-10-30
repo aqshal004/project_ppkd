@@ -3,6 +3,7 @@ import 'package:project_ppkd/preferences/preferences_handler.dart';
 import 'package:project_ppkd/view/dashboard.dart';
 import 'package:project_ppkd/view/login_posyandu.dart';
 import 'package:project_ppkd/view/register_screen.dart';
+import 'package:project_ppkd/view/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,8 +26,9 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      initialRoute: '/login',
+      initialRoute: '/splash',
       routes: {
+        '/splash': (context) => const SplashScreenWidget(),
         '/login': (context) => const LoginPosyanduWidget(),
         '/register': (context) => const RegisterScreenWidget(),
         '/dashboard': (context) => const DashboardWidget(),

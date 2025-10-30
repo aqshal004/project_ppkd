@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_ppkd/preferences/preferences_handler.dart';
 
 class DashboardWidget extends StatefulWidget {
   const DashboardWidget({super.key});
@@ -15,6 +16,13 @@ class _DashboardWidgetState extends State<DashboardWidget> {
       body: Column(
         children: [
           Text("Dashboard"),
+          ElevatedButton(
+            onPressed: () async {
+              await PreferencesHandler.removeLogin();
+              Navigator.of(context).pushReplacementNamed('/login');
+            },
+            child: Text("Logout"),
+          ),
         ],
       ),
     );
