@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart'; // halaman pertama aplikasi kamu
 import 'package:project_ppkd/preferences/preferences_handler.dart';
-import 'package:project_ppkd/view/dashboard.dart';
+import 'package:project_ppkd/view/bottom_nav.dart';
+import 'package:project_ppkd/view/dashboard_admin.dart';
+import 'package:project_ppkd/view/drawer.dart';
 import 'package:project_ppkd/view/login_posyandu.dart';
 import 'package:project_ppkd/view/register_screen.dart';
 import 'package:project_ppkd/view/splash_screen.dart';
@@ -31,7 +33,9 @@ class MyApp extends StatelessWidget {
         '/splash': (context) => const SplashScreenWidget(),
         '/login': (context) => const LoginPosyanduWidget(),
         '/register': (context) => const RegisterScreenWidget(),
-        '/dashboard': (context) => const DashboardWidget(),
+        '/bottomnav': (context) => const BottomNav(),
+        '/admin': (context) => const DashboardAdminWidget(),
+        
       },
       // home: const LoginPosyanduWidget(), // halaman awal
     );

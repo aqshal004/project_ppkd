@@ -25,7 +25,7 @@ class _SplashScreenWidgetState extends State<SplashScreenWidget> {
     await Future.delayed(const Duration(seconds: 2));
     bool? isLoggedIn = await PreferencesHandler.getLogin();
     if (isLoggedIn == true) {
-      Navigator.of(context).pushReplacementNamed('/dashboard');
+      Navigator.of(context).pushReplacementNamed('/bottomnav');
     } else {
       Navigator.of(context).pushReplacementNamed('/login');
     }

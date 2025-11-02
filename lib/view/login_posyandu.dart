@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:project_ppkd/extension/custom_widget.dart';
 import 'package:project_ppkd/preferences/preferences_handler.dart';
-import 'package:project_ppkd/view/dashboard.dart';
+import 'package:project_ppkd/view/bottom_nav.dart';
+import 'package:project_ppkd/view/drawer.dart';
 import 'package:project_ppkd/view/register_screen.dart';
 
 class LoginPosyanduWidget extends StatefulWidget {
@@ -354,16 +355,10 @@ class _LoginPosyanduWidgetState extends State<LoginPosyanduWidget> {
                                         //   user.name,
                                         //   user.email,
                                         // );
-                                        Navigator.push(
-                                          context, 
-                                          MaterialPageRoute(builder: (context) => DashboardWidget(
-                                            // name: user.name,
-                                            // email: user.email,
-                                            // password: user.password,
-                                            // domisili: user.domisili,
-                                          ),
-                                          ),
-                                          );
+                                       Navigator.pushNamed(
+                                        context, 
+                                        '/bottomnav',
+                                        );
                                       }
                                       },
                                       style: ElevatedButton.styleFrom(
