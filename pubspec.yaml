@@ -29,6 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   cupertino_icons: ^1.0.8
+  curved_labeled_navigation_bar: ^2.0.1
   delightful_toast: ^1.1.0
   flutter:
     sdk: flutter

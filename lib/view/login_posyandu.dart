@@ -28,8 +28,8 @@ class _LoginPosyanduWidgetState extends State<LoginPosyanduWidget> {
           // Background biru penuh
           Container(
             height: 396,
-            decoration: const BoxDecoration(
-              color: Color(0xFFABE7B2),
+            decoration: BoxDecoration(
+              color: Colors.teal.shade600,
               // gradient: LinearGradient(
               //   begin: Alignment.topCenter,
               //   end: Alignment.bottomCenter,
@@ -357,7 +357,7 @@ class _LoginPosyanduWidgetState extends State<LoginPosyanduWidget> {
                                         // );
                                        Navigator.pushNamed(
                                         context, 
-                                        '/bottomnav',
+                                        '/bottomuser',
                                         );
                                       }
                                       },

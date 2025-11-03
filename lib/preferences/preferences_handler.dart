@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferencesHandler {
   static const String isLogin = "isLogin";
+  static const String lastPageIndex = "lastPageIndex";
   // static const String userName = "userName";
   // static const String userEmail = "userEmail";
 
@@ -22,6 +23,18 @@ class PreferencesHandler {
     // prefs.remove(userName);
     // prefs.remove(userEmail);
   }
+
+  // Simpan index halaman terakhir
+  // static saveLastPageIndex(int index) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   prefs.setInt(lastPageIndex, index);
+  // }
+
+  //  // Ambil index halaman terakhir
+  // static Future<int> getLastPageIndex() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   return prefs.getInt(lastPageIndex) ?? 0; // Default 0 (Dashboard)
+  // }
 
   // // Simpan data user
   // static saveUserData(String name, String email) async {
