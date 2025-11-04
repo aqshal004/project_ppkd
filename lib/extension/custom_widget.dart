@@ -36,7 +36,7 @@ class _CustomWidgetState extends State<CustomWidget> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.blue.shade300),
+          borderSide: BorderSide(color: Colors.teal.shade600),
         ),
         suffixIcon: widget.isPassword
             ? IconButton(

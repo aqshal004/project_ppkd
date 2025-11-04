@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:project_ppkd/database/db_helper.dart';
+import 'package:project_ppkd/model/user_model.dart';
 
 class RegisterScreenWidget extends StatefulWidget {
   const RegisterScreenWidget({super.key});
@@ -11,8 +13,9 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _domisiliController = TextEditingController();
-  final TextEditingController _nomorhpController = TextEditingController();
+  final TextEditingController _alamatController = TextEditingController();
+  final TextEditingController _nomorHpController = TextEditingController();
+
   final _formkey = GlobalKey<FormState>();
   bool isVisibile = false;
 
@@ -21,65 +24,167 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
     return Scaffold(
       body: Stack(
         children: [
+          // Background Gradient
           Container(
-            height: 397,
-            decoration: const BoxDecoration(
-              color: Color(0xFF4169E1),
+            height: 300,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.teal.shade400,
+                  Colors.teal.shade600,
+                ],
+              ),
             ),
           ),
+          
+          // Decorative Circles
+          Positioned(
+            top: -50,
+            right: -50,
+            child: Container(
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.1),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 100,
+            left: -30,
+            child: Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.1),
+              ),
+            ),
+          ),
+          
           SafeArea(
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   const SizedBox(height: 40),
 
-                  // Logo
-                  Image.asset(
-                    'assets/images/logo.png',
-                    width: 28,
-                    height: 28,
-                  ),
-                  const SizedBox(height: 16),
+                  // Logo & Title Section
+                  Column(
+                    children: [
+                      // Logo Container
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Icon(
+                              Icons.favorite,
+                              size: 40,
+                              color: Colors.teal.shade600,
+                            ),
+                            Positioned(
+                              bottom: 8,
+                              child: Icon(
+                                Icons.child_care,
+                                size: 28,
+                                color: Colors.teal.shade400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
 
-                  // Title
-                  const Text(
-                    'Register',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.w600,
-                    ),
+                      // Title
+                      const Text(
+                        'Daftar Akun',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Posyandu Digital',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
                   ),
-                  const Text(
-                    'Your Account',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  
                   const SizedBox(height: 32),
 
+                  // Form Card
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Container(
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
                       ),
                       child: Form(
                         key: _formkey,
                         child: Column(
                           children: [
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 8),
+                            
+                            // Nama Lengkap Field
                             TextFormField(
                               controller: _nameController,
                               decoration: InputDecoration(
                                 labelText: 'Nama Lengkap',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 14,
                                 ),
+                                prefixIcon: Icon(
+                                  Icons.person_outline,
+                                  color: Colors.teal.shade600,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Colors.teal.shade600,
+                                    width: 2,
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey.shade50,
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -88,14 +193,40 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
                                 return null;
                               },
                             ),
+                            
                             const SizedBox(height: 16),
+                            
+                            // Email Field
                             TextFormField(
                               controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
                               decoration: InputDecoration(
                                 labelText: 'Email',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 14,
                                 ),
+                                prefixIcon: Icon(
+                                  Icons.email_outlined,
+                                  color: Colors.teal.shade600,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Colors.teal.shade600,
+                                    width: 2,
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey.shade50,
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -110,20 +241,29 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
                                 return null;
                               },
                             ),
+                            
                             const SizedBox(height: 16),
+                            
+                            // Password Field
                             TextFormField(
                               controller: _passwordController,
                               obscureText: !isVisibile,
                               decoration: InputDecoration(
                                 labelText: 'Password',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 14,
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.lock_outline,
+                                  color: Colors.teal.shade600,
                                 ),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     isVisibile
                                         ? Icons.visibility
                                         : Icons.visibility_off,
+                                    color: Colors.grey.shade600,
                                   ),
                                   onPressed: () {
                                     setState(() {
@@ -131,6 +271,23 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
                                     });
                                   },
                                 ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Colors.teal.shade600,
+                                    width: 2,
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey.shade50,
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
@@ -141,114 +298,216 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
                                 return null;
                               },
                             ),
-                            SizedBox(height: 24),
+                            
+                            const SizedBox(height: 16),
+                            
+                            // Alamat Field
                             TextFormField(
-                              controller: _domisiliController,
+                              controller: _alamatController,
                               decoration: InputDecoration(
-                                labelText: 'Domisili',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                                labelText: 'Alamat',
+                                labelStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 14,
                                 ),
+                                prefixIcon: Icon(
+                                  Icons.location_on_outlined,
+                                  color: Colors.teal.shade600,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Colors.teal.shade600,
+                                    width: 2,
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey.shade50,
                               ),
-                               validator: (value) {
+                              validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Domisili Tidak Boleh Kosong';
+                                  return 'Alamat Tidak Boleh Kosong';
                                 }
                                 return null;
                               },
                             ),
-                            SizedBox(height: 24),
+                            
+                            const SizedBox(height: 16),
+                            
+                            // Nomor HP Field
                             TextFormField(
-                              controller: _nomorhpController,
+                              controller: _nomorHpController,
+                              keyboardType: TextInputType.phone,
                               decoration: InputDecoration(
                                 labelText: 'Nomor HP',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                                labelStyle: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 14,
                                 ),
+                                prefixIcon: Icon(
+                                  Icons.phone_outlined,
+                                  color: Colors.teal.shade600,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(color: Colors.grey.shade300),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: Colors.teal.shade600,
+                                    width: 2,
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey.shade50,
                               ),
                               validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Nomor HP tidak boleh kosong";
-                              } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
-                                return "Nomor HP hanya boleh berisi angka";
-                              } else if (value.length < 10 || value.length > 13) {
-                                return "Nomor HP harus 10–13 digit";
-                              }
-                              return null;
-                            },
-
-                            ),
-                            const SizedBox(height: 22),
-                            ElevatedButton(
-                              onPressed: () async {
-                                if (_formkey.currentState!.validate()) {
-                                  print(_emailController.text);
-                                  // final UserModel data = UserModel(
-                                  //   name: _nameController.text,
-                                  //   email: _emailController.text,
-                                  //   password: _passwordController.text,
-                                  //   domisili: _domisiliController.text,
-                                  //   nomorhp: _nomorhpController.text,
-                                  // );
-                                  // await DbHelper.registerUser(data);
-                                  // final all = await DbHelper.getALLUser();
-                                  // print("Total user di database: ${all.length}");
-                                  // ScaffoldMessenger.of(context).showSnackBar(
-                                  //   const SnackBar(
-                                  //     content: Text('Register Success'),
-                                  //   ),
-                                  // );
-                                  Navigator.pop(context);
+                                if (value == null || value.isEmpty) {
+                                  return "Nomor HP tidak boleh kosong";
+                                } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                                  return "Nomor HP hanya boleh berisi angka";
+                                } else if (value.length < 10 || value.length > 13) {
+                                  return "Nomor HP harus 10–13 digit";
                                 }
+                                return null;
                               },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF4169E1),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 80,
-                                  vertical: 16,
+                            ),
+                            
+                            const SizedBox(height: 28),
+                            
+                            // Register Button
+                            SizedBox(
+                              width: double.infinity,
+                              height: 52,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  if (_formkey.currentState!.validate()) {
+                                    print(_emailController.text);
+                                    final UserModel data = UserModel(
+                                      name: _nameController.text,
+                                      email: _emailController.text,
+                                      password: _passwordController.text,
+                                      alamat: _alamatController.text,
+                                      nomorHp: _nomorHpController.text,
+                                    );
+                                    await DbHelper.registerUser(data);
+                                    final all = await DbHelper.getALLUser();
+                                    print("Total user di database: ${all.length}");
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Register Success'),
+                                      ),
+                                    );
+                                    Navigator.pop(context);
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.teal.shade600,
+                                  foregroundColor: Colors.white,
+                                  elevation: 2,
+                                  shadowColor: Colors.teal.withOpacity(0.3),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                 ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              child: const Text(
-                                'Register',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                                child: const Text(
+                                  'Daftar Sekarang',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 0.5,
+                                  ),
                                 ),
                               ),
                             ),
-                            SizedBox(height: 24),
-                            ElevatedButton(
-                              onPressed: (){
-                              Navigator.pop(context);
-                            }, 
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF4169E1),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 35,
-                                vertical: 12,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
+                            
+                            const SizedBox(height: 16),
+                            
+                            // Back Button
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Sudah punya akun?',
+                                  style: TextStyle(
+                                    color: Colors.grey.shade600,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    'Masuk',
+                                    style: TextStyle(
+                                      color: Colors.teal.shade600,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            child: Text(
-                              'Back',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
-                            ),
+                            // SizedBox(
+                            //   width: double.infinity,
+                            //   height: 52,
+                            //   child: OutlinedButton(
+                            //     onPressed: () {
+                            //       Navigator.pop(context);
+                            //     },
+                            //     style: OutlinedButton.styleFrom(
+                            //       foregroundColor: Colors.teal.shade600,
+                            //       side: BorderSide(
+                            //         color: Colors.teal.shade600,
+                            //         width: 2,
+                            //       ),
+                            //       shape: RoundedRectangleBorder(
+                            //         borderRadius: BorderRadius.circular(12),
+                            //       ),
+                            //     ),
+                            //     child: Row(
+                            //       mainAxisAlignment: MainAxisAlignment.center,
+                            //       children: [
+                            //         Icon(
+                            //           Icons.arrow_back,
+                            //           size: 20,
+                            //           color: Colors.teal.shade600,
+                            //         ),
+                            //         const SizedBox(width: 8),
+                            //         const Text(
+                            //           'Kembali ke Login',
+                            //           style: TextStyle(
+                            //             fontSize: 16,
+                            //             fontWeight: FontWeight.w600,
+                            //             letterSpacing: 0.5,
+                            //           ),
+                            //         ),
+                            //       ],
+                            //     ),
+                            //   ),
+
+                            const SizedBox(height: 8),
                           ],
                         ),
                       ),
                     ),
                   ),
+                  
+                  const SizedBox(height: 32),
                 ],
               ),
             ),

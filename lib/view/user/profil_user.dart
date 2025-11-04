@@ -9,6 +9,24 @@ class ProfilUser extends StatefulWidget {
 }
 
 class _ProfilUserState extends State<ProfilUser> {
+  String userName = '';
+  String userEmail = '';
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserData();
+  }
+
+  Future<void> loadUserData() async {
+    final userData = await PreferencesHandler.getUserData();
+    setState(() {
+      userName = userData['name'] ?? '';
+      userEmail = userData['email'] ?? '';
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,8 +68,8 @@ class _ProfilUserState extends State<ProfilUser> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Ibu Siti Aisyah',
+                  Text(
+                    userName,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 22,
@@ -59,8 +77,8 @@ class _ProfilUserState extends State<ProfilUser> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    'siti.aisyah@email.com',
+                  Text(
+                    userEmail,
                     style: TextStyle(
                       color: Colors.white70,
                       fontSize: 14,

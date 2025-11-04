@@ -9,6 +9,19 @@ class DashboardWidget extends StatefulWidget {
 }
 
 class _DashboardWidgetState extends State<DashboardWidget> {
+  String userName = '';
+
+    @override
+  void initState() {
+    super.initState();
+    loadUserData();
+  }
+   Future<void> loadUserData() async {
+    final userData = await PreferencesHandler.getUserData();
+    setState(() {
+      userName = userData['name'] ?? '';
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,18 +48,18 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
+                          children: [
+                            const Text(
                               'Selamat Datang,',
                               style: TextStyle(
                                 color: Colors.white70,
                                 fontSize: 14,
                               ),
                             ),
-                            SizedBox(height: 4),
+                            const SizedBox(height: 4),
                             Text(
-                              'Ibu Siti Aisyah',
-                              style: TextStyle(
+                              userName,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold,
