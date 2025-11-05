@@ -78,6 +78,28 @@ class DbHelper {
     print(user.toMap());
   }
 
+  static Future<void> updateUserData(
+  String oldEmail,
+  String newName,
+  String newEmail,
+  String newNomorHp,
+  String newAlamat,
+) async {
+  final dbs = await db();
+  await dbs.update(
+    tableUser,
+    {
+      'name': newName,
+      'email': newEmail,
+      'nomorHp': newNomorHp,
+      'alamat': newAlamat,
+    },
+    where: 'email = ?',
+    whereArgs: [oldEmail],
+  );
+}
+
+
    static Future<List<UserModel>> getALLUser() async {
     final dbs = await db();
     final List<Map<String, dynamic>> results = await dbs.query(tableUser);

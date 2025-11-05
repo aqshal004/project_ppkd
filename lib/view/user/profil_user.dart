@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_ppkd/preferences/preferences_handler.dart';
+import 'package:project_ppkd/view/user/edit_profil.dart';
 
 class ProfilUser extends StatefulWidget {
   const ProfilUser({super.key});
@@ -11,6 +12,8 @@ class ProfilUser extends StatefulWidget {
 class _ProfilUserState extends State<ProfilUser> {
   String userName = '';
   String userEmail = '';
+  String userNomorHp = '';
+  String userAlamat = '';
 
   @override
   void initState() {
@@ -20,12 +23,14 @@ class _ProfilUserState extends State<ProfilUser> {
 
   Future<void> loadUserData() async {
     final userData = await PreferencesHandler.getUserData();
+    final prefs = await PreferencesHandler.getPrefs();
     setState(() {
       userName = userData['name'] ?? '';
       userEmail = userData['email'] ?? '';
+      userNomorHp = prefs.getString('userNomorHp') ?? '';
+      userAlamat = prefs.getString('userAlamat') ?? '';
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +42,27 @@ class _ProfilUserState extends State<ProfilUser> {
         actions: [
           IconButton(
             icon: const Icon(Icons.edit),
-            onPressed: () {
-              // Edit profil
+            onPressed: () async {
+              final prefs = await PreferencesHandler.getPrefs();
+              final nomorHp = prefs.getString('userNomorHp') ?? '';
+              final alamat = prefs.getString('userAlamat') ?? '';
+
+              final result = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditProfilPage(
+                    currentName: userName,
+                    currentEmail: userEmail,
+                    currentNomorHp: nomorHp,
+                    currentAlamat: alamat,
+                  ),
+                ),
+              );
+
+              if (result == true) {
+                await loadUserData(); // Refresh data profil setelah diedit
+                setState(() {}); // Force rebuild agar tampilan update
+              }
             },
           ),
         ],
@@ -87,21 +111,20 @@ class _ProfilUserState extends State<ProfilUser> {
                 ],
               ),
             ),
-            
             Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
                   _buildInfoCard(
                     icon: Icons.phone,
-                    title: 'No. Telepon',
-                    value: '+62 812-3456-7890',
+                    title: 'Nomor HP',
+                    value: userNomorHp.isNotEmpty ? userNomorHp : '-',
                   ),
                   const SizedBox(height: 12),
                   _buildInfoCard(
                     icon: Icons.location_on,
                     title: 'Alamat',
-                    value: 'Jl. Melati No. 123, RT 05/RW 02',
+                    value: userAlamat.isNotEmpty ? userAlamat : '-',
                   ),
                   const SizedBox(height: 12),
                   _buildInfoCard(
@@ -110,48 +133,35 @@ class _ProfilUserState extends State<ProfilUser> {
                     value: '2 Anak',
                   ),
                   const SizedBox(height: 24),
-                  
-                  // _buildMenuButton(
-                  //   icon: Icons.settings,
-                  //   title: 'Pengaturan',
-                  //   onTap: () {},
-                  // ),
-                  // const SizedBox(height: 12),
-                  // _buildMenuButton(
-                  //   icon: Icons.help,
-                  //   title: 'Bantuan',
-                  //   onTap: () {},
-                  // ),
-                  const SizedBox(height: 12),
                   _buildMenuButton(
                     icon: Icons.logout,
                     title: 'Logout',
                     color: Colors.red,
                     onTap: () {
                       showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text("Konfirmasi Logout"),
-                  content: Text("Apakah Anda yakin ingin logout?"),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(); // tutup dialog
-                      },
-                      child: Text("Batal"),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        await PreferencesHandler.removeLogin();
-                        Navigator.of(context).pop(); // tutup dialog
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            '/login', (route) => false);
-                      },
-                      child: Text("Logout"),
-                    ),
-                  ],
-                ),
-              );
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text("Konfirmasi Logout"),
+                          content: const Text("Apakah Anda yakin ingin logout?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(); // tutup dialog
+                              },
+                              child: const Text("Batal"),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                await PreferencesHandler.removeLogin();
+                                Navigator.of(context).pop(); // tutup dialog
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    '/login', (route) => false);
+                              },
+                              child: const Text("Logout"),
+                            ),
+                          ],
+                        ),
+                      );
                     },
                   ),
                 ],
@@ -231,7 +241,7 @@ class _ProfilUserState extends State<ProfilUser> {
     Color? color,
   }) {
     final buttonColor = color ?? Colors.teal.shade600;
-    
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),

@@ -24,6 +24,10 @@ class PreferencesHandler {
     // prefs.remove(userEmail);
   }
 
+  static Future<SharedPreferences> getPrefs() async {
+  return await SharedPreferences.getInstance();
+}
+
   
 
   // Simpan index halaman terakhir
