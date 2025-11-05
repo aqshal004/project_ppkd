@@ -402,6 +402,7 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
                                       password: _passwordController.text,
                                       alamat: _alamatController.text,
                                       nomorHp: _nomorHpController.text,
+                                      role: 'user',
                                     );
                                     await DbHelper.registerUser(data);
                                     final all = await DbHelper.getALLUser();

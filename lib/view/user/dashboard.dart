@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_ppkd/preferences/preferences_handler.dart';
+import 'package:project_ppkd/view/user/page/data_anak.dart';
 
 class DashboardWidget extends StatefulWidget {
   const DashboardWidget({super.key});
@@ -173,6 +174,14 @@ class _DashboardWidgetState extends State<DashboardWidget> {
                           title: 'Data Anak',
                           subtitle: 'Pantau tumbuh kembang',
                           color: Colors.blue.shade400,
+                          onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const DataAnakPage(),
+                            ),
+                          );
+                        },
                         ),
                         _buildMenuCard(
                           icon: Icons.medication,
@@ -268,7 +277,9 @@ class _DashboardWidgetState extends State<DashboardWidget> {
     required String title,
     required String subtitle,
     required Color color,
+    VoidCallback? onTap,
   }) {
+    
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -285,7 +296,7 @@ class _DashboardWidgetState extends State<DashboardWidget> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
-          onTap: () {},
+          onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(

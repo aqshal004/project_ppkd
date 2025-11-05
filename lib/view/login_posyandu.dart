@@ -452,9 +452,17 @@ class _LoginPosyanduWidgetState extends State<LoginPosyanduWidget> {
                                     // Login logic here
                                     await PreferencesHandler.saveLogin(true);
                                     await PreferencesHandler.saveUserData(user.name!, user.email!);
-                                    Navigator.pushNamed(
+                                    if (user.role == 'admin') {
+                                      // Masuk sebagai admin
+                                      Navigator.pushNamed(
+                                        context, 
+                                        '/bottomnav');
+                                      // Masuk sebagai user
+                                    }else {
+                                      Navigator.pushNamed(
                                       context, 
                                       '/bottomuser');
+                                    }
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(

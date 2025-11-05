@@ -111,11 +111,11 @@ class _ProfilUserState extends State<ProfilUser> {
                   ),
                   const SizedBox(height: 24),
                   
-                  _buildMenuButton(
-                    icon: Icons.settings,
-                    title: 'Pengaturan',
-                    onTap: () {},
-                  ),
+                  // _buildMenuButton(
+                  //   icon: Icons.settings,
+                  //   title: 'Pengaturan',
+                  //   onTap: () {},
+                  // ),
                   // const SizedBox(height: 12),
                   // _buildMenuButton(
                   //   icon: Icons.help,
