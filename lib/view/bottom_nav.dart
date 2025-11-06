@@ -1,17 +1,12 @@
-import 'package:curved_labeled_navigation_bar/curved_navigation_bar.dart';
-import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:flutter/material.dart';
+import 'package:project_ppkd/view/admin/anak_page.dart';
 import 'package:project_ppkd/view/dashboard_admin.dart';
 import 'package:project_ppkd/view/drawer.dart';
 import 'package:project_ppkd/view/profil_admin.dart';
-// Import halaman-halaman baru untuk posyandu
-// import 'package:project_ppkd/view/jadwal_posyandu.dart';
-// import 'package:project_ppkd/view/data_balita.dart';
-// import 'package:project_ppkd/view/data_ibu_hamil.dart';
 
 class BottomNav extends StatefulWidget {
-  final int initialIndex; // ✅ Parameter untuk set index awal
-  
+  final int initialIndex;
+
   const BottomNav({super.key, this.initialIndex = 0});
 
   @override
@@ -19,84 +14,120 @@ class BottomNav extends StatefulWidget {
 }
 
 class _BottomNavState extends State<BottomNav> {
-  late int _selectedIndex;
+  late int _currentIndex;
 
-  // ✅ Daftar halaman untuk bottom navigation (5 halaman)
-  static const List<Widget> _widgetOptions = <Widget>[
-    DashboardAdminWidget(),     // 0 - Home/Dashboard
-      // 4 - Pengaturan/Profil
-  ];
-
-  // ✅ Daftar judul untuk AppBar
-  static const List<String> _titles = [
-    'Dashboard Posyandu',
-    'Jadwal Posyandu',
-    'Data Balita',
-    'Data Ibu Hamil',
-    'Pengaturan',
+  final List<Widget> _pages = const [
+    DashboardAdminWidget(),
+    Center(child: Text("Jadwal Posyandu")),
+    AnakPage(),
+    Center(child: Text("Data Ibu Hamil")),
   ];
 
   @override
   void initState() {
     super.initState();
-    // ✅ Set index awal dari parameter
-    _selectedIndex = widget.initialIndex;
+    _currentIndex = widget.initialIndex;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const DrawerWidget(),
-
       appBar: AppBar(
-        title: Text(_titles[_selectedIndex]),
+        title: Text(_getTitle(_currentIndex)),
         backgroundColor: Colors.pink,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
-
-      body: _widgetOptions[_selectedIndex],
-
-      bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.transparent,
-        color: Colors.pink,
-        buttonBackgroundColor: Colors.pinkAccent,
-        height: 60,
-        animationDuration: const Duration(milliseconds: 300),
-        index: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        items: const [
-          CurvedNavigationBarItem(
-            child: Icon(Icons.home, color: Colors.white),
-            label: 'Home',
-            labelStyle: TextStyle(color: Colors.white, fontSize: 12),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _pages,
+      ),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 8,
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          selectedItemColor: Colors.pink,
+          unselectedItemColor: Colors.grey.shade400,
+          selectedFontSize: 12,
+          unselectedFontSize: 12,
+          selectedLabelStyle: const TextStyle(
+            fontWeight: FontWeight.w600,
           ),
-          CurvedNavigationBarItem(
-            child: Icon(Icons.calendar_today, color: Colors.white),
-            label: 'Jadwal',
-            labelStyle: TextStyle(color: Colors.white, fontSize: 12),
-          ),
-          CurvedNavigationBarItem(
-            child: Icon(Icons.child_care, color: Colors.white),
-            label: 'Balita',
-            labelStyle: TextStyle(color: Colors.white, fontSize: 12),
-          ),
-          CurvedNavigationBarItem(
-            child: Icon(Icons.pregnant_woman, color: Colors.white),
-            label: 'Ibu Hamil',
-            labelStyle: TextStyle(color: Colors.white, fontSize: 12),
-          ),
-          CurvedNavigationBarItem(
-            child: Icon(Icons.settings, color: Colors.white),
-            label: 'Setting',
-            labelStyle: TextStyle(color: Colors.white, fontSize: 12),
-          ),
-        ],
+          backgroundColor: Colors.white,
+          elevation: 0,
+          items: [
+            BottomNavigationBarItem(
+              icon: _buildIcon(Icons.home_outlined, 0),
+              activeIcon: _buildIcon(Icons.home, 0, active: true),
+              label: 'Dashboard',
+            ),
+            BottomNavigationBarItem(
+              icon: _buildIcon(Icons.calendar_month_outlined, 1),
+              activeIcon: _buildIcon(Icons.calendar_month, 1, active: true),
+              label: 'Jadwal',
+            ),
+            BottomNavigationBarItem(
+              icon: _buildIcon(Icons.child_care_outlined, 2),
+              activeIcon: _buildIcon(Icons.child_care, 2, active: true),
+              label: 'Balita',
+            ),
+            BottomNavigationBarItem(
+              icon: _buildIcon(Icons.pregnant_woman_outlined, 3),
+              activeIcon:
+                  _buildIcon(Icons.pregnant_woman, 3, active: true),
+              label: 'Ibu Hamil',
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  Widget _buildIcon(IconData icon, int index, {bool active = false}) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: active
+          ? BoxDecoration(
+              color: Colors.pink.shade50,
+              borderRadius: BorderRadius.circular(12),
+            )
+          : null,
+      child: Icon(
+        icon,
+        size: 26,
+      ),
+    );
+  }
+
+  String _getTitle(int index) {
+    switch (index) {
+      case 0:
+        return "Dashboard Posyandu";
+      case 1:
+        return "Jadwal Posyandu";
+      case 2:
+        return "Data Balita";
+      case 3:
+        return "Data Ibu Hamil";
+      case 4:
+        return "Pengaturan";
+      default:
+        return "Posyandu";
+    }
   }
 }

@@ -8,13 +8,13 @@ import 'package:project_ppkd/view/drawer.dart';
 import 'package:project_ppkd/view/login_posyandu.dart';
 import 'package:project_ppkd/view/register_screen.dart';
 import 'package:project_ppkd/view/splash_screen.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+// import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Inisialisasi database untuk desktop
-  sqfliteFfiInit();
-  databaseFactory = databaseFactoryFfi;
+  // sqfliteFfiInit();
+  // databaseFactory = databaseFactoryFfi;
   // lakukan inisialisasi yang diperlukan di sini
   // final isLoggedIn = await PreferencesHandler.isLogin(); // kalau kamu punya fungsi init SharedPreferences
 

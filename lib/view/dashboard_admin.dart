@@ -1,309 +1,299 @@
 // ==================== dashboard_admin.dart ====================
 import 'package:flutter/material.dart';
+import 'package:project_ppkd/view/admin/anak_page.dart';
 
 class DashboardAdminWidget extends StatelessWidget {
   const DashboardAdminWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Welcome Card
-          Card(
-            elevation: 4,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Colors.pink, Colors.pinkAccent],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+    return Scaffold(
+      backgroundColor: Colors.grey[100],
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Welcome Card
+            Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15),
               ),
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(
-                      Icons.local_hospital,
-                      color: Colors.white,
-                      size: 40,
-                    ),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Colors.pink, Colors.pinkAccent],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          'Selamat Datang!',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 14,
-                          ),
-                        ),
-                        SizedBox(height: 4),
-                        Text(
-                          'Posyandu Melati RW 05',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 2),
-                        Text(
-                          'Kelurahan Beji, Depok',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(
+                        Icons.local_hospital,
+                        color: Colors.white,
+                        size: 40,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 24),
-
-          // Section Title
-          const Text(
-            'Ringkasan Data',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Statistics Grid
-          GridView.count(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 2,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 1.1,
-            children: [
-              _buildStatCard(
-                icon: Icons.child_care,
-                title: 'Total Balita',
-                value: '145',
-                subtitle: '+5 bulan ini',
-                color: Colors.blue,
-                gradientColors: [Colors.blue, Colors.lightBlue],
-              ),
-              _buildStatCard(
-                icon: Icons.pregnant_woman,
-                title: 'Ibu Hamil',
-                value: '32',
-                subtitle: '+3 bulan ini',
-                color: Colors.purple,
-                gradientColors: [Colors.purple, Colors.purpleAccent],
-              ),
-              _buildStatCard(
-                icon: Icons.vaccines,
-                title: 'Imunisasi',
-                value: '87',
-                subtitle: 'Bulan ini',
-                color: Colors.green,
-                gradientColors: [Colors.green, Colors.lightGreen],
-              ),
-              _buildStatCard(
-                icon: Icons.monitor_weight,
-                title: 'Penimbangan',
-                value: '124',
-                subtitle: 'Bulan ini',
-                color: Colors.orange,
-                gradientColors: [Colors.orange, Colors.orangeAccent],
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 24),
-
-          // Quick Actions
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text(
-                'Aksi Cepat',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                    const SizedBox(width: 16),
+                    const Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Selamat Datang!',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 14,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            'Posyandu Melati RW 05',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            'Kelurahan Beji, Depok',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+                  ],
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 12),
+            ),
 
-          Row(
-            children: [
-              Expanded(
-                child: _buildQuickActionCard(
-                  icon: Icons.add_circle_outline,
-                  title: 'Tambah Balita',
+            const SizedBox(height: 24),
+
+            // Section Title
+            const Text(
+              'Ringkasan Data',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Statistics Grid
+            GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: 0.9,
+              children: [
+                _buildStatCard(
+                  icon: Icons.child_care,
+                  title: 'Total Balita',
+                  value: '145',
+                  subtitle: '+5 bulan ini',
                   color: Colors.blue,
-                  onTap: () {
-                    // TODO: Navigate to add balita
-                  },
+                  gradientColors: [Colors.blue, Colors.lightBlue],
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildQuickActionCard(
-                  icon: Icons.calendar_month,
-                  title: 'Lihat Jadwal',
-                  color: Colors.pink,
-                  onTap: () {
-                    // TODO: Navigate to schedule
-                  },
+                _buildStatCard(
+                  icon: Icons.pregnant_woman,
+                  title: 'Ibu Hamil',
+                  value: '32',
+                  subtitle: '+3 bulan ini',
+                  color: Colors.purple,
+                  gradientColors: [Colors.purple, Colors.purpleAccent],
                 ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          Row(
-            children: [
-              Expanded(
-                child: _buildQuickActionCard(
+                _buildStatCard(
                   icon: Icons.vaccines,
-                  title: 'Catat Imunisasi',
+                  title: 'Imunisasi',
+                  value: '87',
+                  subtitle: 'Bulan ini',
                   color: Colors.green,
-                  onTap: () {
-                    // TODO: Navigate to immunization
-                  },
+                  gradientColors: [Colors.green, Colors.lightGreen],
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildQuickActionCard(
-                  icon: Icons.description,
-                  title: 'Buat Laporan',
+                _buildStatCard(
+                  icon: Icons.monitor_weight,
+                  title: 'Penimbangan',
+                  value: '124',
+                  subtitle: 'Bulan ini',
                   color: Colors.orange,
-                  onTap: () {
-                    // TODO: Navigate to reports
-                  },
+                  gradientColors: [Colors.orange, Colors.orangeAccent],
                 ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 24),
-
-          // Recent Activities
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Kegiatan Terbaru',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  // TODO: Show all activities
-                },
-                child: const Text('Lihat Semua'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-
-          _buildActivityCard(
-            icon: Icons.vaccines,
-            title: 'Imunisasi BCG',
-            subtitle: 'Bayi Aisyah - 2 bulan',
-            time: '10 menit lalu',
-            color: Colors.green,
-          ),
-          _buildActivityCard(
-            icon: Icons.monitor_weight,
-            title: 'Penimbangan Balita',
-            subtitle: 'Muhammad Rizki - 15 bulan (10.2 kg)',
-            time: '25 menit lalu',
-            color: Colors.blue,
-          ),
-          _buildActivityCard(
-            icon: Icons.local_hospital,
-            title: 'Pemeriksaan Ibu Hamil',
-            subtitle: 'Ibu Siti - Usia kandungan 7 bulan',
-            time: '1 jam lalu',
-            color: Colors.purple,
-          ),
-          _buildActivityCard(
-            icon: Icons.person_add,
-            title: 'Pendaftaran Balita Baru',
-            subtitle: 'Ahmad Fauzi - 6 bulan',
-            time: '2 jam lalu',
-            color: Colors.orange,
-          ),
-
-          const SizedBox(height: 24),
-
-          // Alerts Section
-          const Text(
-            'Peringatan',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              ],
             ),
-          ),
-          const SizedBox(height: 12),
 
-          _buildAlertCard(
-            icon: Icons.warning_amber_rounded,
-            title: '8 Balita perlu imunisasi minggu ini',
-            color: Colors.orange,
-            onTap: () {
-              // TODO: Show immunization list
-            },
-          ),
-          _buildAlertCard(
-            icon: Icons.medical_services,
-            title: '5 Ibu hamil jadwal kontrol bulan ini',
-            color: Colors.red,
-            onTap: () {
-              // TODO: Show checkup list
-            },
-          ),
-          _buildAlertCard(
-            icon: Icons.inventory_2,
-            title: 'Stok vitamin A menipis',
-            color: Colors.blue,
-            onTap: () {
-              // TODO: Show stock management
-            },
-          ),
-        ],
+            const SizedBox(height: 24),
+
+            // Quick Actions
+            const Text(
+              'Aksi Cepat',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            Row(
+              children: [
+                Expanded(
+                  child: _buildQuickActionCard(
+                    icon: Icons.add_circle_outline,
+                    title: 'Tambah Balita',
+                    color: Colors.blue,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const AnakPage()),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildQuickActionCard(
+                    icon: Icons.calendar_month,
+                    title: 'Lihat Jadwal',
+                    color: Colors.pink,
+                    onTap: () {},
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            Row(
+              children: [
+                Expanded(
+                  child: _buildQuickActionCard(
+                    icon: Icons.vaccines,
+                    title: 'Catat Imunisasi',
+                    color: Colors.green,
+                    onTap: () {},
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildQuickActionCard(
+                    icon: Icons.description,
+                    title: 'Buat Laporan',
+                    color: Colors.orange,
+                    onTap: () {},
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 24),
+
+            // Recent Activities
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Kegiatan Terbaru',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text('Lihat Semua'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            _buildActivityCard(
+              icon: Icons.vaccines,
+              title: 'Imunisasi BCG',
+              subtitle: 'Bayi Aisyah - 2 bulan',
+              time: '10 menit lalu',
+              color: Colors.green,
+            ),
+            _buildActivityCard(
+              icon: Icons.monitor_weight,
+              title: 'Penimbangan Balita',
+              subtitle: 'Muhammad Rizki - 15 bulan (10.2 kg)',
+              time: '25 menit lalu',
+              color: Colors.blue,
+            ),
+            _buildActivityCard(
+              icon: Icons.local_hospital,
+              title: 'Pemeriksaan Ibu Hamil',
+              subtitle: 'Ibu Siti - Usia kandungan 7 bulan',
+              time: '1 jam lalu',
+              color: Colors.purple,
+            ),
+            _buildActivityCard(
+              icon: Icons.person_add,
+              title: 'Pendaftaran Balita Baru',
+              subtitle: 'Ahmad Fauzi - 6 bulan',
+              time: '2 jam lalu',
+              color: Colors.orange,
+            ),
+
+            const SizedBox(height: 24),
+
+            // Alerts Section
+            const Text(
+              'Peringatan',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            _buildAlertCard(
+              icon: Icons.warning_amber_rounded,
+              title: '8 Balita perlu imunisasi minggu ini',
+              color: Colors.orange,
+              onTap: () {},
+            ),
+            _buildAlertCard(
+              icon: Icons.medical_services,
+              title: '5 Ibu hamil jadwal kontrol bulan ini',
+              color: Colors.red,
+              onTap: () {},
+            ),
+            _buildAlertCard(
+              icon: Icons.inventory_2,
+              title: 'Stok vitamin A menipis',
+              color: Colors.blue,
+              onTap: () {},
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  // Stat Card Widget
-  Widget _buildStatCard({
+  // --------------------- Widget Builders ---------------------
+
+  static Widget _buildStatCard({
     required IconData icon,
     required String title,
     required String value,
@@ -336,7 +326,7 @@ class DashboardAdminWidget extends StatelessWidget {
               ),
               child: Icon(icon, size: 32, color: color),
             ),
-            const Spacer(),
+            const SizedBox(height: 10),
             Text(
               value,
               style: TextStyle(
@@ -368,8 +358,7 @@ class DashboardAdminWidget extends StatelessWidget {
     );
   }
 
-  // Quick Action Card Widget
-  Widget _buildQuickActionCard({
+  static Widget _buildQuickActionCard({
     required IconData icon,
     required String title,
     required Color color,
@@ -410,8 +399,7 @@ class DashboardAdminWidget extends StatelessWidget {
     );
   }
 
-  // Activity Card Widget
-  Widget _buildActivityCard({
+  static Widget _buildActivityCard({
     required IconData icon,
     required String title,
     required String subtitle,
@@ -469,8 +457,7 @@ class DashboardAdminWidget extends StatelessWidget {
     );
   }
 
-  // Alert Card Widget
-  Widget _buildAlertCard({
+  static Widget _buildAlertCard({
     required IconData icon,
     required String title,
     required Color color,

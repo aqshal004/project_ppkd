@@ -112,19 +112,21 @@ class DbHelper {
   // ============================================
   
   // CREATE - Tambah data anak
-  static Future<int> createAnak(Anak anak, int userId) async {
-    final dbs = await db();
-    final Map<String, dynamic> data = anak.toMap();
-    data['userId'] = userId; // Tambahkan userId
-    
-    final id = await dbs.insert(
-      tableAnak,
-      data,
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-    print('Anak berhasil ditambahkan dengan ID: $id');
-    return id;
-  }
+static Future<int> createAnak(Anak anak, int userId) async {
+  final database = await db(); // ✅ gunakan nama variabel yang berbeda
+  final Map<String, dynamic> data = anak.toMap();
+
+  data['userId'] = userId; // tambahkan kolom userId
+
+  final id = await database.insert(
+    tableAnak, // pastikan 'tableAnak' didefinisikan di atas
+    data,
+    conflictAlgorithm: ConflictAlgorithm.replace,
+  );
+
+  print('✅ Anak berhasil ditambahkan dengan ID: $id');
+  return id;
+}
   
   // // READ - Ambil semua data anak berdasarkan userId
   // static Future<List<Anak>> getAnakByUserId(int userId) async {
@@ -140,10 +142,10 @@ class DbHelper {
   
   // READ - Ambil semua data anak
   static Future<List<Anak>> getAllAnak() async {
-    final dbs = await db();
-    final List<Map<String, dynamic>> results = await dbs.query(tableAnak);
-    return results.map((e) => Anak.fromMap(e)).toList();
-  }
+  final database = await db(); // ✅ panggil fungsi db() dengan aman
+  final result = await database.query('anak');
+  return result.map((e) => Anak.fromMap(e)).toList();
+}
   
   // READ - Ambil satu data anak berdasarkan ID
   static Future<Anak?> getAnakById(int id) async {
@@ -159,26 +161,27 @@ class DbHelper {
     return null;
   }
   
-  // UPDATE - Update data anak
-  static Future<int> updateAnak(Anak anak, int id) async {
-    final dbs = await db();
-    return await dbs.update(
-      tableAnak,
-      anak.toMap(),
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-  }
-  
-  // DELETE - Hapus data anak
-  static Future<int> deleteAnak(int id) async {
-    final dbs = await db();
-    return await dbs.delete(
-      tableAnak,
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-  }
+  // UPDATE
+static Future<int> updateAnak(Anak anak, int id) async {
+  final database = await db(); // ✅ ganti nama variabel
+  return database.update(
+    'anak',
+    anak.toMap(),
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+}
+
+// DELETE
+static Future<int> deleteAnak(int id) async {
+  final database = await db(); // ✅ ganti nama variabel
+  return database.delete(
+    'anak',
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+}
+
   
   // READ - Hitung jumlah anak berdasarkan userId
   static Future<int> countAnakByUserId(int userId) async {

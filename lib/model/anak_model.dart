@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 
 class Anak {
+  int? id;
+  int? userId;
   final String nama;
   final String tanggalLahir;
   final String jenisKelamin;
@@ -13,6 +15,8 @@ class Anak {
   final String kunjunganTerakhir;
 
   Anak({
+     this.id,
+    this.userId,
     required this.nama,
     required this.tanggalLahir,
     required this.jenisKelamin,
@@ -26,13 +30,23 @@ class Anak {
 
   // Hitung usia dalam bulan
   int get usiaBulan {
-    final lahir = DateTime.parse(tanggalLahir);
-    final sekarang = DateTime.now();
-    return (sekarang.year - lahir.year) * 12 + (sekarang.month - lahir.month);
+  try {
+    final birthDate = DateTime.parse(tanggalLahir);
+    final now = DateTime.now();
+    return (now.year - birthDate.year) * 12 + now.month - birthDate.month;
+  } catch (e) {
+    return 0; // fallback agar tidak crash
   }
+}
 
   // Hitung usia dalam tahun
-  int get usiaTahun => usiaBulan ~/ 12;
+int get usiaTahun {
+  try {
+    return usiaBulan ~/ 12;
+  } catch (e) {
+    return 0;
+  }
+}
 
   String get usiaString {
     final tahun = usiaTahun;
@@ -175,6 +189,8 @@ class Anak {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
+      'userId': userId,
       'nama': nama,
       'tanggalLahir': tanggalLahir,
       'jenisKelamin': jenisKelamin,
@@ -189,6 +205,8 @@ class Anak {
 
   factory Anak.fromMap(Map<String, dynamic> map) {
     return Anak(
+      id: map['id'],
+      userId: map['userId'],
       nama: map['nama'] as String,
       tanggalLahir: map['tanggalLahir'] as String,
       jenisKelamin: map['jenisKelamin'] as String,
