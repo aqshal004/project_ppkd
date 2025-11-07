@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_ppkd/preferences/preferences_handler.dart';
-import 'package:project_ppkd/view/login_posyandu.dart';
-import 'dart:async';
 
-import 'package:project_ppkd/view/user/bottom_user.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);

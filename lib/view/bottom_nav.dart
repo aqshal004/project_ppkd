@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:project_ppkd/view/admin/anak_page.dart';
 import 'package:project_ppkd/view/dashboard_admin.dart';
 import 'package:project_ppkd/view/drawer.dart';
-import 'package:project_ppkd/view/profil_admin.dart';
 
 class BottomNav extends StatefulWidget {
   final int initialIndex;

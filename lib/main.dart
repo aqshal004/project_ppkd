@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart'; // halaman pertama aplikasi kamu
-import 'package:project_ppkd/preferences/preferences_handler.dart';
 import 'package:project_ppkd/view/bottom_nav.dart';
 import 'package:project_ppkd/view/user/bottom_user.dart';
 import 'package:project_ppkd/view/user/dashboard.dart';
-import 'package:project_ppkd/view/dashboard_admin.dart';
-import 'package:project_ppkd/view/drawer.dart';
 import 'package:project_ppkd/view/login_posyandu.dart';
 import 'package:project_ppkd/view/register_screen.dart';
 import 'package:project_ppkd/view/splash_screen.dart';
