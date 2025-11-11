@@ -34,7 +34,7 @@ class _BottomNavState extends State<BottomNav> {
       drawer: const DrawerWidget(),
       appBar: AppBar(
         title: Text(_getTitle(_currentIndex)),
-        backgroundColor: Colors.pink,
+        backgroundColor: Colors.teal.shade600,
         foregroundColor: Colors.white,
         elevation: 0,
       ),

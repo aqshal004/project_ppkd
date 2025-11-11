@@ -75,17 +75,23 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 // agar ketika refresh berhasil maka harus samakan key di prefences misal isLogin = isLogin jangan ada typo misal isLoggedIn
 Future<void> _startSplashScreen() async {
   await Future.delayed(const Duration(seconds: 3));
-  
+
   if (!mounted) return;
-  
+
   bool isLogin = await PreferencesHandler.getLogin() ?? false;
-  
+  String? role = await PreferencesHandler.getRole();
+
   if (isLogin) {
-    Navigator.of(context).pushReplacementNamed('/bottomuser');
+    if (role == 'admin') {
+      Navigator.of(context).pushReplacementNamed('/bottomnav'); // Admin dashboard
+    } else {
+      Navigator.of(context).pushReplacementNamed('/bottomuser'); // User dashboard
+    }
   } else {
     Navigator.of(context).pushReplacementNamed('/login');
   }
 }
+
 
   @override
   void dispose() {

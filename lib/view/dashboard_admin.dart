@@ -21,8 +21,8 @@ class DashboardAdminWidget extends StatelessWidget {
               ),
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Colors.pink, Colors.pinkAccent],
+                  gradient: LinearGradient(
+                    colors: [Colors.teal.shade600, Colors.greenAccent],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),

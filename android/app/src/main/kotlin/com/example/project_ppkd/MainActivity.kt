@@ -1,4 +1,4 @@
-package com.example.project_ppkd
+package com.ppkd.sehatin_aja
 
 import io.flutter.embedding.android.FlutterActivity
 

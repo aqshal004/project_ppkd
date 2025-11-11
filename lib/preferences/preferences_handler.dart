@@ -28,7 +28,16 @@ class PreferencesHandler {
   return await SharedPreferences.getInstance();
 }
 
-  
+  static Future<void> saveRole(String role) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('role', role);
+}
+
+static Future<String?> getRole() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('role');
+}
+
 
   // Simpan index halaman terakhir
   // static saveLastPageIndex(int index) async {

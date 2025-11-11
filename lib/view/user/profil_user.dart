@@ -153,6 +153,7 @@ class _ProfilUserState extends State<ProfilUser> {
                             TextButton(
                               onPressed: () async {
                                 await PreferencesHandler.removeLogin();
+                                await PreferencesHandler.saveRole('');
                                 Navigator.of(context).pop(); // tutup dialog
                                 Navigator.of(context).pushNamedAndRemoveUntil(
                                     '/login', (route) => false);

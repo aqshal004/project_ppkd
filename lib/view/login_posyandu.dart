@@ -451,6 +451,7 @@ class _LoginPosyanduWidgetState extends State<LoginPosyanduWidget> {
                                     }
                                     // Login logic here
                                     await PreferencesHandler.saveLogin(true);
+                                    await PreferencesHandler.saveRole(user.role ?? 'user'); // "admin" atau "user"
                                     await PreferencesHandler.saveUserData(user.name!, user.email!,);
                                     if (user.role == 'admin') {
                                       // Masuk sebagai admin

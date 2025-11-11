@@ -36,12 +36,11 @@ class MyApp extends StatelessWidget {
         '/splash': (context) => const SplashScreen(),
         '/login': (context) => const LoginPosyanduWidget(),
         '/register': (context) => const RegisterScreenWidget(),
-        '/bottomnav': (context) => const BottomNav(),
-        '/bottomuser':(context) => const BottomNavUser(),
-        // '/admin': (context) => const DashboardAdminWidget(),
+        '/bottomnav': (context) => const BottomNav(), // Admin
+        '/bottomuser': (context) => const BottomNavUser(), // User
         '/user': (context) => const DashboardWidget(),
-        
       },
+
       // home: const LoginPosyanduWidget(), // halaman awal
     );
   }
