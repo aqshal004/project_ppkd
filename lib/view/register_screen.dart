@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_ppkd/database/db_helper.dart';
 import 'package:project_ppkd/model/user_model.dart';
+import 'package:project_ppkd/preferences/preferences_handler.dart';
 
 class RegisterScreenWidget extends StatefulWidget {
   const RegisterScreenWidget({super.key});
@@ -405,6 +406,16 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
                                       role: 'user',
                                     );
                                     await DbHelper.registerUser(data);
+                                    // TAMBAHKAN INI: Simpan juga ke SharedPreferences
+                                    await PreferencesHandler.saveUserData(
+                                      _nameController.text,
+                                      _emailController.text,
+                                      _nomorHpController.text,
+                                      _alamatController.text,
+                                    );
+                                     final prefs = await PreferencesHandler.getPrefs();
+                                      prefs.setString('userNomorHp', _nomorHpController.text);
+                                      prefs.setString('userAlamat', _alamatController.text);
                                     final all = await DbHelper.getALLUser();
                                     print("Total user di database: ${all.length}");
                                     ScaffoldMessenger.of(context).showSnackBar(

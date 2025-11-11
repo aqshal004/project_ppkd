@@ -60,7 +60,7 @@ class _BottomNavState extends State<BottomNav> {
               _currentIndex = index;
             });
           },
-          selectedItemColor: Colors.pink,
+          selectedItemColor: Colors.teal.shade600,
           unselectedItemColor: Colors.grey.shade400,
           selectedFontSize: 12,
           unselectedFontSize: 12,

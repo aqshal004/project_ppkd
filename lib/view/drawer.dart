@@ -19,7 +19,7 @@ class DrawerWidget extends StatelessWidget {
                 DrawerHeader(
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Colors.pink, Colors.pinkAccent],
+                      colors: [Colors.teal, Colors.teal],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -34,7 +34,7 @@ class DrawerWidget extends StatelessWidget {
                         child: Icon(
                           Icons.local_hospital,
                           size: 35,
-                          color: Colors.pink,
+                          color: Colors.teal,
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -91,7 +91,7 @@ class DrawerWidget extends StatelessWidget {
 
                 // Menu Laporan
                 ListTile(
-                  leading: const Icon(Icons.description, color: Colors.pink),
+                  leading: const Icon(Icons.description, color: Colors.teal),
                   title: const Text('Laporan'),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () {
@@ -105,7 +105,7 @@ class DrawerWidget extends StatelessWidget {
 
                 // Menu Stok Obat & Vitamin
                 ListTile(
-                  leading: const Icon(Icons.inventory, color: Colors.pink),
+                  leading: const Icon(Icons.inventory, color: Colors.teal),
                   title: const Text('Stok Obat & Vitamin'),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () {
@@ -119,7 +119,7 @@ class DrawerWidget extends StatelessWidget {
 
                 // Menu Notifikasi Imunisasi
                 ListTile(
-                  leading: const Icon(Icons.notifications, color: Colors.pink),
+                  leading: const Icon(Icons.notifications, color: Colors.teal),
                   title: const Text('Notifikasi Imunisasi'),
                   trailing: Container(
                     padding: const EdgeInsets.all(6),
@@ -149,7 +149,7 @@ class DrawerWidget extends StatelessWidget {
 
                 // Menu Bantuan
                 ListTile(
-                  leading: const Icon(Icons.help_outline, color: Colors.pink),
+                  leading: const Icon(Icons.help_outline, color: Colors.teal),
                   title: const Text('Bantuan'),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () {
@@ -163,7 +163,7 @@ class DrawerWidget extends StatelessWidget {
 
                 // Menu Tentang Aplikasi
                 ListTile(
-                  leading: const Icon(Icons.info_outline, color: Colors.pink),
+                  leading: const Icon(Icons.info_outline, color: Colors.teal),
                   title: const Text('Tentang Aplikasi'),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () {
@@ -228,7 +228,7 @@ class DrawerWidget extends StatelessWidget {
     required int index,
   }) {
     return ListTile(
-      leading: Icon(icon, color: Colors.pink),
+      leading: Icon(icon, color: Colors.teal),
       title: Text(title),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
       onTap: () {
@@ -251,7 +251,7 @@ class DrawerWidget extends StatelessWidget {
       builder: (context) => AlertDialog(
         title: Row(
           children: const [
-            Icon(Icons.local_hospital, color: Colors.pink),
+            Icon(Icons.local_hospital, color: Colors.teal),
             SizedBox(width: 8),
             Text("Posyandu Digital"),
           ],

@@ -40,6 +40,8 @@ class _EditProfilPageState extends State<EditProfilPage> {
     await PreferencesHandler.saveUserData(
       nameController.text,
       emailController.text,
+      nomorhpController.text,
+      alamatController.text,
     );
 
     // Setelah saveUserData(...)

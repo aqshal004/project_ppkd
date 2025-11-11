@@ -176,12 +176,12 @@ class _AnakPageState extends State<AnakPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Data Anak'),
-        backgroundColor: Colors.pink,
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Data Anak'),
+      //   backgroundColor: Colors.teal,
+      // ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.pink,
+        backgroundColor: Colors.teal,
         onPressed: () => _showForm(),
         child: const Icon(Icons.add),
       ),
@@ -219,7 +219,7 @@ class _AnakPageState extends State<AnakPage> {
                         onPressed: () => _showForm(anak: a),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
+                        icon: const Icon(Icons.delete, color: Colors.teal),
                         onPressed: () => _delete(a.id!),
                       ),
                     ],

@@ -5,6 +5,8 @@ class PreferencesHandler {
   static const String lastPageIndex = "lastPageIndex";
   static const String userName = "userName";
   static const String userEmail = "userEmail";
+  static const String userNomorHp = "userNomorHp";
+  static const String userAlamat = "userAlamat";
 
 
   static saveLogin(bool value) async{
@@ -52,10 +54,13 @@ static Future<String?> getRole() async {
   // }
 
   // Simpan data user
-  static saveUserData(String name, String email) async {
+  static saveUserData(String name, String email, String nomorhp, String alamat) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(userName, name);
     prefs.setString(userEmail, email);
+    prefs.setString(userNomorHp, nomorhp);
+    prefs.setString(userAlamat, alamat);
+
   }
 
   // Ambil data user
