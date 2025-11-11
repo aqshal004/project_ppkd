@@ -102,7 +102,7 @@ class _BottomNavState extends State<BottomNav> {
       padding: const EdgeInsets.all(8),
       decoration: active
           ? BoxDecoration(
-              color: Colors.pink.shade50,
+              color: Colors.teal.shade50,
               borderRadius: BorderRadius.circular(12),
             )
           : null,
