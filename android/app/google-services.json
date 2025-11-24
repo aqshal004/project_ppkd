@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "525559107604",
+    "project_id": "aqshal-sehatinaja",
+    "storage_bucket": "aqshal-sehatinaja.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:525559107604:android:ca5c17a56150c6c1f09701",
+        "android_client_info": {
+          "package_name": "com.ppkd.sehatin_aja"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXfWyecFcEjU9099SjXeqfysAwTt5iM2I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
