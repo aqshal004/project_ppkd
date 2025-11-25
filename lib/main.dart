@@ -2,13 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart'; // halaman pertama aplikasi kamu
 import 'package:project_ppkd/firebase_options.dart';
 import 'package:project_ppkd/view/bottom_nav.dart';
+import 'package:project_ppkd/view/login_posyandu_firebase.dart';
+import 'package:project_ppkd/view/register_posyandu_firebase.dart';
 import 'package:project_ppkd/view/user/bottom_user.dart';
 import 'package:project_ppkd/view/user/dashboard.dart';
-import 'package:project_ppkd/view/login_posyandu.dart';
-import 'package:project_ppkd/view/register_screen.dart';
 import 'package:project_ppkd/view/splash_screen.dart';
 // import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -37,13 +37,13 @@ class MyApp extends StatelessWidget {
       initialRoute: '/splash',
       routes: {
         '/splash': (context) => const SplashScreen(),
-        '/login': (context) => const LoginPosyanduWidget(),
-        '/register': (context) => const RegisterScreenWidget(),
+        '/login': (context) => const LoginPosyanduFirebase(),
+        '/register': (context) => const RegisterPosyanduFirebase(),
         '/bottomnav': (context) => const BottomNav(), // Admin
         '/bottomuser': (context) => const BottomNavUser(), // User
         '/user': (context) => const DashboardWidget(),
       },
-
+navigatorObservers: [routeObserver],
       // home: const LoginPosyanduWidget(), // halaman awal
     );
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:project_ppkd/preferences/preferences_handler.dart';
 import 'package:project_ppkd/view/user/page/data_anak.dart';
+import 'package:project_ppkd/main.dart';
+
 
 class DashboardWidget extends StatefulWidget {
   const DashboardWidget({super.key});
@@ -9,8 +11,26 @@ class DashboardWidget extends StatefulWidget {
   State<DashboardWidget> createState() => _DashboardWidgetState();
 }
 
-class _DashboardWidgetState extends State<DashboardWidget> {
+class _DashboardWidgetState extends State<DashboardWidget>with RouteAware {
   String userName = '';
+  
+@override
+void didChangeDependencies() {
+  super.didChangeDependencies();
+  routeObserver.subscribe(this, ModalRoute.of(context)! as PageRoute);
+}
+
+@override
+void dispose() {
+  routeObserver.unsubscribe(this);
+  super.dispose();
+}
+
+@override
+void didPopNext() {
+  // Dipanggil otomatis ketika user kembali ke Dashboard dari halaman lain
+  loadUserData();
+}
 
     @override
   void initState() {

@@ -54,9 +54,9 @@ static Future<String?> getRole() async {
   // }
 
   // Simpan data user
-  static saveUserData(String name, String email, String nomorhp, String alamat) async {
+  static saveUserData(String username, String email, String nomorhp, String alamat) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString(userName, name);
+    prefs.setString(userName, username);
     prefs.setString(userEmail, email);
     prefs.setString(userNomorHp, nomorhp);
     prefs.setString(userAlamat, alamat);
@@ -71,4 +71,8 @@ static Future<String?> getRole() async {
       'email': prefs.getString(userEmail),
     };
   }
+  static Future<String?> getUserUid() async {
+  final prefs = await getPrefs();
+  return prefs.getString("userUid");
+}
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_ppkd/database/db_helper.dart';
 import 'package:project_ppkd/preferences/preferences_handler.dart';
+import 'package:project_ppkd/service/firebase.dart';
 
 class EditProfilPage extends StatefulWidget {
   final String currentName;
@@ -36,7 +37,6 @@ class _EditProfilPageState extends State<EditProfilPage> {
   }
 
   Future<void> _saveChanges() async {
-    // Simpan data baru ke SharedPreferences
     await PreferencesHandler.saveUserData(
       nameController.text,
       emailController.text,
@@ -44,21 +44,28 @@ class _EditProfilPageState extends State<EditProfilPage> {
       alamatController.text,
     );
 
-    // Setelah saveUserData(...)
-await DbHelper.updateUserData(
-  widget.currentEmail, // email lama
-  nameController.text,
-  emailController.text,
-  nomorhpController.text,
-  alamatController.text,
-);
+    final uid = (await PreferencesHandler.getUserUid()) ?? '';
+    print("Edit Profil UID: $uid");
 
-    // Simpan juga nomor HP dan alamat (pakai key baru)
+    final success = await FirebaseService.updateUserData(
+      uid: uid,
+      username: nameController.text,
+      email: emailController.text,
+      nomorHp: nomorhpController.text,
+      alamat: alamatController.text,
+    );
+
+    if (!success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Gagal update data ke Firebase")),
+      );
+      return;
+    }
+
     final prefs = await PreferencesHandler.getPrefs();
     prefs.setString('userNomorHp', nomorhpController.text);
     prefs.setString('userAlamat', alamatController.text);
 
-    // Tutup halaman dan kirim sinyal bahwa data diupdate
     Navigator.pop(context, true);
   }
 
@@ -81,14 +88,41 @@ await DbHelper.updateUserData(
               ),
             ),
             const SizedBox(height: 20),
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                border: OutlineInputBorder(),
+
+            /// ---------------------- EMAIL (READONLY + SHADOW) ----------------------
+            Container(
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    blurRadius: 6,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: TextField(
+                controller: emailController,
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  filled: true,
+                  fillColor: Colors.grey.shade200,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade400,
+                    ),
+                  ),
+                ),
               ),
             ),
+            /// ------------------------------------------------------------------------
+
             const SizedBox(height: 20),
+
             TextField(
               controller: nomorhpController,
               decoration: const InputDecoration(
@@ -97,7 +131,9 @@ await DbHelper.updateUserData(
               ),
               keyboardType: TextInputType.phone,
             ),
+
             const SizedBox(height: 20),
+
             TextField(
               controller: alamatController,
               decoration: const InputDecoration(
@@ -106,7 +142,9 @@ await DbHelper.updateUserData(
               ),
               maxLines: 2,
             ),
+
             const SizedBox(height: 30),
+
             ElevatedButton(
               onPressed: _saveChanges,
               style: ElevatedButton.styleFrom(
