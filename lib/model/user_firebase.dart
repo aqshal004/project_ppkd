@@ -8,7 +8,7 @@ class UserFirebaseModel {
   String? password;
   String? alamat;
   String? nomorHp;
-  String? jeniskelamin;
+  // String? jeniskelamin;
   int? jumlahAnak;
   String? role;
   String? createdAt;
@@ -20,7 +20,7 @@ class UserFirebaseModel {
     this.password,
     this.alamat,
     this.nomorHp,
-    this.jeniskelamin,
+    // this.jeniskelamin,
     this.jumlahAnak,
     this.role,
     this.createdAt,
@@ -35,7 +35,7 @@ class UserFirebaseModel {
       'password': password,
       'alamat': alamat,
       'nomorHp': nomorHp,
-      'jeniskelamin': jeniskelamin,
+      // 'jeniskelamin': jeniskelamin,
       'jumlahAnak': jumlahAnak,
       'role': role,
       'createdAt': createdAt,
@@ -50,8 +50,8 @@ class UserFirebaseModel {
       email: map['email'] != null ? map['email'] as String : null,
       password: map['password'] != null ? map['password'] as String : null,
       alamat: map['alamat'] != null ? map['alamat'] as String : null,
-      nomorHp: map['nomorHp'] != null ? map['nomorHp'] as String : null,
-      jeniskelamin: map['jeniskelamin'] != null ? map['jeniskelamin'] as String : null,
+ // jeniskelamin: map['jeniskelamin'] != null ? map['jeniskelamin'] as String : null,      nomorHp: map['nomorHp'] != null ? map['nomorHp'] as String : null,
+     
       jumlahAnak: map['jumlahAnak'] != null ? map['jumlahAnak'] as int : null,
       role: map['role'] != null ? map['role'] as String : null,
       createdAt: map['createdAt'] != null ? map['createdAt'] as String : null,
