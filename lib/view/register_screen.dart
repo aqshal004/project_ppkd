@@ -16,6 +16,7 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _alamatController = TextEditingController();
   final TextEditingController _nomorHpController = TextEditingController();
+  String? selectedStatus;
 
   final _formkey = GlobalKey<FormState>();
   bool isVisibile = false;
@@ -412,6 +413,8 @@ class _RegisterScreenWidgetState extends State<RegisterScreenWidget> {
                                       _emailController.text,
                                       _nomorHpController.text,
                                       _alamatController.text,
+                                      selectedStatus ?? '',
+
                                     );
                                      final prefs = await PreferencesHandler.getPrefs();
                                       prefs.setString('userNomorHp', _nomorHpController.text);

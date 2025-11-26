@@ -7,6 +7,7 @@ class PreferencesHandler {
   static const String userEmail = "userEmail";
   static const String userNomorHp = "userNomorHp";
   static const String userAlamat = "userAlamat";
+  static const String userStatus = "userStatus";
 
 
   static saveLogin(bool value) async{
@@ -54,12 +55,13 @@ static Future<String?> getRole() async {
   // }
 
   // Simpan data user
-  static saveUserData(String username, String email, String nomorhp, String alamat) async {
+  static saveUserData(String username, String email, String nomorhp, String alamat, String status,) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(userName, username);
     prefs.setString(userEmail, email);
     prefs.setString(userNomorHp, nomorhp);
     prefs.setString(userAlamat, alamat);
+    prefs.setString(userStatus, status);
 
   }
 

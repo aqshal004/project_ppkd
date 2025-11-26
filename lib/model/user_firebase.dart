@@ -11,6 +11,7 @@ class UserFirebaseModel {
   // String? jeniskelamin;
   int? jumlahAnak;
   String? role;
+  String? statusPosyandu;
   String? createdAt;
   String? updatedAt;
   UserFirebaseModel({
@@ -23,6 +24,7 @@ class UserFirebaseModel {
     // this.jeniskelamin,
     this.jumlahAnak,
     this.role,
+    this.statusPosyandu,
     this.createdAt,
     this.updatedAt,
   });
@@ -38,6 +40,7 @@ class UserFirebaseModel {
       // 'jeniskelamin': jeniskelamin,
       'jumlahAnak': jumlahAnak,
       'role': role,
+      'statusPosyandu': statusPosyandu,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
     };
@@ -51,9 +54,9 @@ class UserFirebaseModel {
       password: map['password'] != null ? map['password'] as String : null,
       alamat: map['alamat'] != null ? map['alamat'] as String : null,
  // jeniskelamin: map['jeniskelamin'] != null ? map['jeniskelamin'] as String : null,      nomorHp: map['nomorHp'] != null ? map['nomorHp'] as String : null,
-     
       jumlahAnak: map['jumlahAnak'] != null ? map['jumlahAnak'] as int : null,
       role: map['role'] != null ? map['role'] as String : null,
+      statusPosyandu: map['statusPosyandu'] != null ? map['statusPosyandu'] as String : null,
       createdAt: map['createdAt'] != null ? map['createdAt'] as String : null,
       updatedAt: map['updatedAt'] != null ? map['updatedAt'] as String : null,
     );

@@ -14,6 +14,7 @@ class FirebaseService {
     required String alamat,
     required String nomorHp,
     required String role,
+    required String statusPosyandu, // <-- ini dipakai
   }) async {
     final cred = await auth.createUserWithEmailAndPassword(
       email: email,
@@ -29,6 +30,7 @@ class FirebaseService {
       alamat: alamat,
       nomorHp: nomorHp,
       role: role,
+      statusPosyandu: statusPosyandu, // <-- perbaikan DI SINI
       createdAt: DateTime.now().toIso8601String(),
       updatedAt: DateTime.now().toIso8601String(),
     );
@@ -44,7 +46,6 @@ class FirebaseService {
     required String password,
   }) async {
     try {
-      // LOGIN YANG BENAR
       final cred = await auth.signInWithEmailAndPassword(
         email: email,
         password: password,
@@ -69,27 +70,66 @@ class FirebaseService {
     final doc = await firestore.collection('users').doc(uid).get();
     return doc.data();
   }
+
+  // UPDATE USER
   static Future<bool> updateUserData({
-  required String uid,
-  required String username,
-  required String email,
-  required String nomorHp,
-  required String alamat,
-}) async {
-  try {
-    await firestore.collection('users').doc(uid).update({
-      "username": username,
-      "email": email,
-      "nomorHp": nomorHp,
-      "alamat": alamat,
-      "updatedAt": DateTime.now().toIso8601String(),
-    });
+    required String uid,
+    required String username,
+    required String email,
+    required String nomorHp,
+    required String alamat,
+    required String statusPosyandu,
+  }) async {
+    try {
+      await firestore.collection('users').doc(uid).update({
+        "username": username,
+        "email": email,
+        "nomorHp": nomorHp,
+        "alamat": alamat,
+        "statusPosyandu": statusPosyandu,
+        "updatedAt": DateTime.now().toIso8601String(),
+      });
 
-
-    return true;
-  } catch (e) {
-    return false;
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
-}
 
+  // SEED ADMIN DEFAULT
+  static Future<void> seedAdmin() async {
+    const adminEmail = "admin@gmail.com";
+    const adminPassword = "admin123";
+
+    final query = await firestore
+        .collection("users")
+        .where("role", isEqualTo: "admin")
+        .get();
+
+    if (query.docs.isNotEmpty) {
+      return; // Admin sudah ada
+    }
+
+    try {
+      final cred = await auth.createUserWithEmailAndPassword(
+        email: adminEmail,
+        password: adminPassword,
+      );
+
+      final uid = cred.user!.uid;
+
+      await firestore.collection("users").doc(uid).set({
+        "uid": uid,
+        "username": "Admin Posyandu",
+        "email": adminEmail,
+        "role": "admin",
+        "createdAt": DateTime.now().toIso8601String(),
+        "updatedAt": DateTime.now().toIso8601String(),
+      });
+
+      print("Admin default berhasil dibuat");
+    } catch (e) {
+      print("Gagal membuat admin default: $e");
+    }
+  }
 }

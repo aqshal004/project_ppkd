@@ -16,8 +16,8 @@ class _RegisterPosyanduFirebaseState extends State<RegisterPosyanduFirebase> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _alamatController = TextEditingController();
   final TextEditingController _nomorHpController = TextEditingController();
-
   final _formkey = GlobalKey<FormState>();
+  String? selectedStatus;
   bool isVisibile = false;
   @override
   Widget build(BuildContext context) {
@@ -300,7 +300,32 @@ class _RegisterPosyanduFirebaseState extends State<RegisterPosyanduFirebase> {
                             ),
                             
                             const SizedBox(height: 16),
-                            
+                            DropdownButtonFormField<String>(
+                            value: selectedStatus,
+                            decoration: InputDecoration(
+                              labelText: "Status",
+                              prefixIcon: Icon(Icons.account_box, color: Colors.teal.shade600),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                            items: const [
+                              DropdownMenuItem(
+                                value: "ibu_hamil",
+                                child: Text("Ibu Hamil"),
+                              ),
+                              DropdownMenuItem(
+                                value: "ortu_balita",
+                                child: Text("Orang Tua Balita"),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              setState(() {
+                                selectedStatus = value;
+                              });
+                            },
+                            validator: (value) =>
+                                value == null ? "Pilih status terlebih dahulu" : null,
+                          ),
+                            const SizedBox(height: 16),
                             // Alamat Field
                             TextFormField(
                               controller: _alamatController,
@@ -400,6 +425,8 @@ class _RegisterPosyanduFirebaseState extends State<RegisterPosyanduFirebase> {
                                     final username = _nameController.text.trim();
                                     final alamat = _alamatController.text.trim();
                                     final nomorHp = _nomorHpController.text.trim();
+                                    final status = selectedStatus!;
+
 
                                     try {
                                       final user = await FirebaseService.registerUser(
@@ -409,6 +436,7 @@ class _RegisterPosyanduFirebaseState extends State<RegisterPosyanduFirebase> {
                                         alamat: alamat,
                                         nomorHp: nomorHp,
                                         role: 'user',
+                                        statusPosyandu: status,
                                       );
 
                                       if (!mounted) return;
@@ -420,11 +448,13 @@ class _RegisterPosyanduFirebaseState extends State<RegisterPosyanduFirebase> {
                                           email,
                                           nomorHp,
                                           alamat,
+                                          status,
                                         );
 
                                         final prefs = await PreferencesHandler.getPrefs();
                                         prefs.setString('userNomorHp', nomorHp);
                                         prefs.setString('userAlamat', alamat);
+                                        prefs.setString('userStatus', status);
 
                                         ScaffoldMessenger.of(context).showSnackBar(
                                           const SnackBar(content: Text("Berhasil Register")),
@@ -495,51 +525,12 @@ class _RegisterPosyanduFirebaseState extends State<RegisterPosyanduFirebase> {
                                 ),
                               ],
                             ),
-                            // SizedBox(
-                            //   width: double.infinity,
-                            //   height: 52,
-                            //   child: OutlinedButton(
-                            //     onPressed: () {
-                            //       Navigator.pop(context);
-                            //     },
-                            //     style: OutlinedButton.styleFrom(
-                            //       foregroundColor: Colors.teal.shade600,
-                            //       side: BorderSide(
-                            //         color: Colors.teal.shade600,
-                            //         width: 2,
-                            //       ),
-                            //       shape: RoundedRectangleBorder(
-                            //         borderRadius: BorderRadius.circular(12),
-                            //       ),
-                            //     ),
-                            //     child: Row(
-                            //       mainAxisAlignment: MainAxisAlignment.center,
-                            //       children: [
-                            //         Icon(
-                            //           Icons.arrow_back,
-                            //           size: 20,
-                            //           color: Colors.teal.shade600,
-                            //         ),
-                            //         const SizedBox(width: 8),
-                            //         const Text(
-                            //           'Kembali ke Login',
-                            //           style: TextStyle(
-                            //             fontSize: 16,
-                            //             fontWeight: FontWeight.w600,
-                            //             letterSpacing: 0.5,
-                            //           ),
-                            //         ),
-                            //       ],
-                            //     ),
-                            //   ),
-
                             const SizedBox(height: 8),
                           ],
                         ),
                       ),
                     ),
                   ),
-                  
                   const SizedBox(height: 32),
                 ],
               ),

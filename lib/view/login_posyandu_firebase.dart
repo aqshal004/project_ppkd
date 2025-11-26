@@ -467,6 +467,7 @@ class _LoginPosyanduFirebaseState extends State<LoginPosyanduFirebase> {
                                       userData['email'] ?? '',
                                       userData['nomorHp'] ?? '',
                                       userData['alamat'] ?? '',
+                                      userData['statusPosyandu'] ?? '',
                                     );
                                     // SIMPAN UID USER KE SHAREDPREFERENCES (WAJIB UNTUK EDIT PROFIL)
                                   final prefs = await PreferencesHandler.getPrefs();

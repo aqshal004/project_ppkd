@@ -14,6 +14,7 @@ class _ProfilUserState extends State<ProfilUser> {
   String userEmail = '';
   String userNomorHp = '';
   String userAlamat = '';
+  String userStatus = '';
 
   @override
   void initState() {
@@ -29,6 +30,7 @@ class _ProfilUserState extends State<ProfilUser> {
       userEmail = userData['email'] ?? '';
       userNomorHp = prefs.getString('userNomorHp') ?? '';
       userAlamat = prefs.getString('userAlamat') ?? '';
+      userStatus = prefs.getString('userStatus') ?? '';
     });
   }
 
@@ -36,12 +38,12 @@ class _ProfilUserState extends State<ProfilUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profil'),
+        title: const Text('Profil', style: TextStyle(color: Colors.white),),
         backgroundColor: Colors.teal.shade600,
         elevation: 2,
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit),
+            icon: const Icon(Icons.edit, color: Colors.white,),
             onPressed: () async {
               final prefs = await PreferencesHandler.getPrefs();
               final nomorHp = prefs.getString('userNomorHp') ?? '';
@@ -55,6 +57,7 @@ class _ProfilUserState extends State<ProfilUser> {
                     currentEmail: userEmail,
                     currentNomorHp: nomorHp,
                     currentAlamat: alamat,
+                    currentStatus: userStatus,
                   ),
                 ),
               );
@@ -115,6 +118,16 @@ class _ProfilUserState extends State<ProfilUser> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
+                  const SizedBox(height: 12),
+            _buildInfoCard(
+              icon: Icons.account_box,
+              title: 'Status Posyandu',
+              value: userStatus == "ibu_hamil"
+                  ? "Ibu Hamil"
+                  : userStatus == "ortu_balita"
+                      ? "Orang Tua Balita"
+                      : "-",
+),
                   _buildInfoCard(
                     icon: Icons.phone,
                     title: 'Nomor HP',

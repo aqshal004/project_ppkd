@@ -8,6 +8,7 @@ class EditProfilPage extends StatefulWidget {
   final String currentEmail;
   final String currentNomorHp;
   final String currentAlamat;
+  final String currentStatus;
 
   const EditProfilPage({
     super.key,
@@ -15,6 +16,7 @@ class EditProfilPage extends StatefulWidget {
     required this.currentEmail,
     required this.currentNomorHp,
     required this.currentAlamat,
+    required this.currentStatus,
   });
 
   @override
@@ -27,6 +29,8 @@ class _EditProfilPageState extends State<EditProfilPage> {
   late TextEditingController nomorhpController;
   late TextEditingController alamatController;
 
+  String? selectedStatus;
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +38,7 @@ class _EditProfilPageState extends State<EditProfilPage> {
     emailController = TextEditingController(text: widget.currentEmail);
     nomorhpController = TextEditingController(text: widget.currentNomorHp);
     alamatController = TextEditingController(text: widget.currentAlamat);
+    selectedStatus = widget.currentStatus;
   }
 
   Future<void> _saveChanges() async {
@@ -42,6 +47,8 @@ class _EditProfilPageState extends State<EditProfilPage> {
       emailController.text,
       nomorhpController.text,
       alamatController.text,
+      selectedStatus!,
+
     );
 
     final uid = (await PreferencesHandler.getUserUid()) ?? '';
@@ -53,6 +60,7 @@ class _EditProfilPageState extends State<EditProfilPage> {
       email: emailController.text,
       nomorHp: nomorhpController.text,
       alamat: alamatController.text,
+      statusPosyandu: selectedStatus!,
     );
 
     if (!success) {
@@ -133,7 +141,31 @@ class _EditProfilPageState extends State<EditProfilPage> {
             ),
 
             const SizedBox(height: 20),
-
+      IgnorePointer(
+      child: DropdownButtonFormField<String>(
+                    value: selectedStatus,
+                    decoration: const InputDecoration(
+                      labelText: "Status Posyandu",
+                      border: OutlineInputBorder(),
+                    ),
+                    items: const [
+                      DropdownMenuItem(
+                        value: "ibu_hamil",
+                        child: Text("Ibu Hamil"),
+                      ),
+                      DropdownMenuItem(
+                        value: "ortu_balita",
+                        child: Text("Orang Tua Balita"),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        selectedStatus = value;
+                      });
+                    },
+                  ),
+              ),
+            const SizedBox(height: 20),
             TextField(
               controller: alamatController,
               decoration: const InputDecoration(
