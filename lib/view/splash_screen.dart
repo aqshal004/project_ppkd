@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_ppkd/constant/footer.dart';
 import 'package:project_ppkd/preferences/preferences_handler.dart';
 
 import 'dart:async';
@@ -290,21 +291,29 @@ Future<void> _startSplashScreen() async {
             ),
             
             // Version Info at bottom
-            Positioned(
+          Positioned(
               bottom: 40,
               left: 0,
               right: 0,
               child: FadeTransition(
                 opacity: _fadeAnimation,
-                child: Center(
-                  child: Text(
-                    'Versi 1.0.0',
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.6),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w300,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Versi 1.0.0',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.6),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w300,
+                      ),
                     ),
-                  ),
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 0),
+                      child: CreditFooter(),
+                    ),
+                  ],
                 ),
               ),
             ),
