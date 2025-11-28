@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_ppkd/constant/footer.dart';
 import 'package:project_ppkd/extension/custom_widget.dart';
 import 'package:project_ppkd/preferences/preferences_handler.dart';
 import 'package:project_ppkd/service/firebase.dart';
@@ -552,6 +553,7 @@ class _LoginPosyanduFirebaseState extends State<LoginPosyanduFirebase> {
                   ),
 
                   const SizedBox(height: 40),
+                  const CreditFooter(),
                 ],
               ),
             ),

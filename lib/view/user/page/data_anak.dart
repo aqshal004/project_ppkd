@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:project_ppkd/database/db_helper.dart';
-import 'package:project_ppkd/model/anak_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:project_ppkd/model/anak_firebase.dart';
+import 'package:project_ppkd/service/firebase_anak.dart';
 
 class DataAnakPage extends StatefulWidget {
   const DataAnakPage({Key? key}) : super(key: key);
@@ -10,30 +12,19 @@ class DataAnakPage extends StatefulWidget {
 }
 
 class _DataAnakPageState extends State<DataAnakPage> {
-  List<Anak> _daftarAnak = [];
-  bool _isLoading = true;
+  String? uid;
 
   @override
-  void initState() {
-    super.initState();
-    _loadDataAnak();
-  }
+void initState() {
+  super.initState();
 
-  // LOAD DATA DARI DATABASE
-  Future<void> _loadDataAnak() async {
-    setState(() => _isLoading = true);
-    try {
-      final data = await DbHelper.getAllAnak();
-      setState(() {
-        _daftarAnak = data;
-        _isLoading = false;
-      });
-    } catch (e) {
-      print('Error loading data: $e');
-      setState(() => _isLoading = false);
-      _showSnackBar('Gagal memuat data anak');
-    }
-  }
+  FirebaseAuth.instance.authStateChanges().listen((user) {
+    setState(() {
+      uid = user?.uid;
+      print("Current UID: $uid");
+    });
+  });
+}
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -43,6 +34,10 @@ class _DataAnakPageState extends State<DataAnakPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (uid == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
@@ -52,163 +47,195 @@ class _DataAnakPageState extends State<DataAnakPage> {
         ),
         backgroundColor: Colors.teal.shade600,
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadDataAnak,
-            tooltip: 'Refresh',
-          ),
-        ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _daftarAnak.isEmpty
-              ? _buildEmptyState()
-              : SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Header Info Card
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Colors.teal.shade600, Colors.teal.shade400],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: const Icon(
-                                Icons.family_restroom,
-                                color: Colors.white,
-                                size: 28,
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Jumlah Anak',
-                                    style: TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        '${_daftarAnak.length}',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 32,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      const Text(
-                                        'Anak',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
 
-                      const SizedBox(height: 24),
+      // ============================
+      //   FUTUREBUILDER FIREBASE
+      // ============================
+     body: StreamBuilder<QuerySnapshot>(
+  stream: FirebaseAnakService.anakRef
+      .where("userId", isEqualTo: uid)
+      .snapshots(),
+  builder: (context, snapshot) {
+    print(snapshot.data);
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-                      // Info Note
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.blue.shade50,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: Colors.blue.shade200,
-                              width: 1,
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.info_outline,
-                                color: Colors.blue.shade700,
-                                size: 24,
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Text(
-                                  'Data diperbarui oleh petugas posyandu setiap kunjungan',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.blue.shade900,
-                                    height: 1.4,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+    if (snapshot.hasError) {
+      return Center(child: Text("Error: ${snapshot.error}"));
+    }
 
-                      const SizedBox(height: 20),
+    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+      return _buildEmptyState();
+    }
 
-                      // List Data Anak
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Daftar Anak',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF2D3748),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: _daftarAnak.length,
-                              itemBuilder: (context, index) {
-                                return _buildAnakCard(_daftarAnak[index]);
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
+    final children = snapshot.data!.docs.map((doc) {
+      return AnakFirebase.fromMap(
+          doc.id, doc.data() as Map<String, dynamic>);
+    }).toList();
 
-                      const SizedBox(height: 24),
-                    ],
-                  ),
-                ),
+    return _buildMainContent(children);
+  },
+),
+
+
     );
   }
 
-  Widget _buildAnakCard(Anak anak) {
+  // ============================
+  // UI CONTENT (TIDAK DIUBAH)
+  // ============================
+
+  Widget _buildMainContent(List<AnakFirebase> children) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header jumlah anak
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.teal.shade600, Colors.teal.shade400],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.family_restroom,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Jumlah Anak',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Text(
+                            '${children.length}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const Text(
+                            'Anak',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
+          // Note info
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: Colors.blue.shade200,
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    color: Colors.blue.shade700,
+                    size: 24,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Data diperbarui oleh petugas posyandu setiap kunjungan',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.blue.shade900,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          // List Anak
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Daftar Anak',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF2D3748),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: children.length,
+                  itemBuilder: (context, index) {
+                    return _buildAnakCard(children[index]);
+                  },
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 30),
+        ],
+      ),
+    );
+  }
+
+  // ===================================================================
+  // CARD ANAK — UI TETAP, HANYA GANTI TIPE Anak -> AnakFirebase
+  // ===================================================================
+
+  Widget _buildAnakCard(AnakFirebase anak) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -233,7 +260,6 @@ class _DataAnakPageState extends State<DataAnakPage> {
               children: [
                 Row(
                   children: [
-                    // Avatar
                     Container(
                       width: 70,
                       height: 70,
@@ -253,7 +279,6 @@ class _DataAnakPageState extends State<DataAnakPage> {
                     ),
                     const SizedBox(width: 16),
 
-                    // Info Anak
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -306,7 +331,6 @@ class _DataAnakPageState extends State<DataAnakPage> {
                       ),
                     ),
 
-                    // Status Gizi Badge
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 12,
@@ -342,7 +366,6 @@ class _DataAnakPageState extends State<DataAnakPage> {
                 Divider(color: Colors.grey.shade200),
                 const SizedBox(height: 12),
 
-                // Stats Row
                 Row(
                   children: [
                     Expanded(
@@ -384,7 +407,6 @@ class _DataAnakPageState extends State<DataAnakPage> {
 
                 const SizedBox(height: 12),
 
-                // Last Visit Info
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -420,7 +442,6 @@ class _DataAnakPageState extends State<DataAnakPage> {
 
                 const SizedBox(height: 12),
 
-                // Action Buttons
                 Row(
                   children: [
                     Expanded(
@@ -481,7 +502,6 @@ class _DataAnakPageState extends State<DataAnakPage> {
         const SizedBox(height: 4),
         Text(
           label,
-          textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 10,
             color: Colors.grey.shade600,
@@ -538,45 +558,17 @@ class _DataAnakPageState extends State<DataAnakPage> {
                 height: 1.5,
               ),
             ),
-            const SizedBox(height: 32),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Colors.blue.shade200,
-                  width: 1,
-                ),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.info_outline,
-                    color: Colors.blue.shade700,
-                    size: 24,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Silakan kunjungi posyandu terdekat untuk mendaftarkan anak Anda',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.blue.shade900,
-                        height: 1.4,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),
     );
   }
 
-  void _showDetailAnakDialog(Anak anak) {
+  // ============================================================
+  // DETAIL DIALOG
+  // ============================================================
+
+  void _showDetailAnakDialog(AnakFirebase anak) {
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -589,7 +581,6 @@ class _DataAnakPageState extends State<DataAnakPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Header
                 Row(
                   children: [
                     Container(
@@ -639,17 +630,15 @@ class _DataAnakPageState extends State<DataAnakPage> {
                 Divider(color: Colors.grey.shade200),
                 const SizedBox(height: 16),
 
-                // Detail Information
-                _buildDetailRow('Tanggal Lahir', _formatTanggalLahir(anak.tanggalLahir), Icons.cake),
-                _buildDetailRow('Jenis Kelamin', anak.jenisKelamin, 
+                _buildDetailRow('Tanggal Lahir', anak.tanggalLahir, Icons.cake),
+                _buildDetailRow('Jenis Kelamin', anak.jenisKelamin,
                     anak.isLakiLaki ? Icons.male : Icons.female),
                 _buildDetailRow('Golongan Darah', anak.golonganDarah, Icons.bloodtype),
-                
+
                 const SizedBox(height: 16),
                 Divider(color: Colors.grey.shade200),
                 const SizedBox(height: 16),
 
-                // Health Stats
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -660,30 +649,47 @@ class _DataAnakPageState extends State<DataAnakPage> {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 12),
-                _buildDetailRow('Berat Badan', '${anak.beratBadan} kg', Icons.monitor_weight_outlined),
-                _buildDetailRow('Tinggi Badan', '${anak.tinggiBadan} cm', Icons.height),
-                _buildDetailRow('Lingkar Kepala', '${anak.lingkarKepala} cm', Icons.album_outlined),
-                _buildDetailRow('IMT', anak.imt.toStringAsFixed(1), Icons.calculate),
-                _buildDetailRow('Status Gizi', anak.statusGizi, Icons.favorite,
-                    valueColor: anak.statusGiziColor),
-                _buildDetailRow('Status Stunting', anak.statusStunting, Icons.height,
-                    valueColor: anak.statusStunting.toLowerCase().contains('stunted') 
-                        ? Colors.red : Colors.green),
-                
+
+                _buildDetailRow('Berat Badan', '${anak.beratBadan} kg',
+                    Icons.monitor_weight_outlined),
+                _buildDetailRow('Tinggi Badan', '${anak.tinggiBadan} cm',
+                    Icons.height),
+                _buildDetailRow('Lingkar Kepala', '${anak.lingkarKepala} cm',
+                    Icons.album_outlined),
+                _buildDetailRow('IMT', anak.imt.toStringAsFixed(1),
+                    Icons.calculate),
+                _buildDetailRow(
+                  'Status Gizi',
+                  anak.statusGizi,
+                  Icons.favorite,
+                  valueColor: anak.statusGiziColor,
+                ),
+                _buildDetailRow(
+                  'Status Stunting',
+                  anak.statusStunting,
+                  Icons.height,
+                  valueColor: anak.statusStunting
+                          .toLowerCase()
+                          .contains('stunted')
+                      ? Colors.red
+                      : Colors.green,
+                ),
+
                 const SizedBox(height: 16),
                 Divider(color: Colors.grey.shade200),
                 const SizedBox(height: 16),
 
-                // Immunization Info
-                _buildDetailRow('Imunisasi Terakhir', anak.imunisasiTerakhir, Icons.medical_services),
-                _buildDetailRow('Kunjungan Terakhir', anak.kunjunganTerakhir, Icons.event_available),
+                _buildDetailRow('Imunisasi Terakhir',
+                    anak.imunisasiTerakhir, Icons.medical_services),
+                _buildDetailRow('Kunjungan Terakhir',
+                    anak.kunjunganTerakhir, Icons.event_available),
 
                 const SizedBox(height: 16),
                 Divider(color: Colors.grey.shade200),
                 const SizedBox(height: 16),
 
-                // Rekomendasi
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -715,7 +721,6 @@ class _DataAnakPageState extends State<DataAnakPage> {
 
                 const SizedBox(height: 24),
 
-                // Close Button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -745,16 +750,14 @@ class _DataAnakPageState extends State<DataAnakPage> {
     );
   }
 
-  Widget _buildDetailRow(String label, String value, IconData icon, {Color? valueColor}) {
+  Widget _buildDetailRow(
+      String label, String value, IconData icon,
+      {Color? valueColor}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          Icon(
-            icon,
-            size: 20,
-            color: Colors.grey.shade600,
-          ),
+          Icon(icon, size: 20, color: Colors.grey.shade600),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -781,20 +784,11 @@ class _DataAnakPageState extends State<DataAnakPage> {
     );
   }
 
-  String _formatTanggalLahir(String tanggalISO) {
-    try {
-      final date = DateTime.parse(tanggalISO);
-      final months = [
-        '', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-      ];
-      return '${date.day} ${months[date.month]} ${date.year}';
-    } catch (e) {
-      return tanggalISO;
-    }
-  }
+  // ============================================================
+  // Grafik Dialog (UI sama)
+  // ============================================================
 
-  void _showGrafikDialog(Anak anak) {
+  void _showGrafikDialog(AnakFirebase anak) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

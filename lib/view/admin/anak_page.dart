@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:project_ppkd/database/db_helper.dart';
-import 'package:project_ppkd/model/anak_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
+import 'package:project_ppkd/model/anak_firebase.dart';
+import 'package:project_ppkd/service/firebase_anak.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AnakPage extends StatefulWidget {
   const AnakPage({super.key});
@@ -12,146 +12,139 @@ class AnakPage extends StatefulWidget {
 }
 
 class _AnakPageState extends State<AnakPage> {
-  late Future<List<Anak>> _anakFuture;
+  String? currentUid;
 
   @override
-  void initState() {
-    super.initState();
-    _refreshData();
-  }
+void initState() {
+  super.initState();
+  currentUid = FirebaseAuth.instance.currentUser?.uid;
+  print("UID AnakPage: $currentUid");
+}
 
-  void _refreshData() {
-    setState(() {
-      _anakFuture = DbHelper.getAllAnak();
-    });
-  }
 
-  Future<int?> _getUserIdFromPrefs() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt('userId'); // disimpan saat login
-  }
+  // ==================================================
+  // FORM TAMBAH / EDIT
+  // ==================================================
+  void _showForm({AnakFirebase? anak}) {
+    final namaController = TextEditingController(text: anak?.nama ?? '');
+    final tanggalLahirController = TextEditingController(text: anak?.tanggalLahir ?? '');
+    String? selectedJenisKelamin = anak?.jenisKelamin;
+    final beratController = TextEditingController(text: anak?.beratBadan.toString() ?? '');
+    final tinggiController = TextEditingController(text: anak?.tinggiBadan.toString() ?? '');
+    final lingkarController = TextEditingController(text: anak?.lingkarKepala.toString() ?? '');
+    final golController = TextEditingController(text: anak?.golonganDarah ?? '');
+    final imunController = TextEditingController(text: anak?.imunisasiTerakhir ?? '');
+    final kunjunganController = TextEditingController(text: anak?.kunjunganTerakhir ?? '');
 
- void _showForm({Anak? anak}) {
-  final namaController = TextEditingController(text: anak?.nama ?? '');
-  final tanggalLahirController = TextEditingController(text: anak?.tanggalLahir ?? '');
-  String? selectedJenisKelamin = anak?.jenisKelamin; // dropdown value
-  final beratController = TextEditingController(text: anak?.beratBadan.toString() ?? '');
-  final tinggiController = TextEditingController(text: anak?.tinggiBadan.toString() ?? '');
-  final lingkarController = TextEditingController(text: anak?.lingkarKepala.toString() ?? '');
-  final golonganController = TextEditingController(text: anak?.golonganDarah ?? '');
-  final imunisasiController = TextEditingController(text: anak?.imunisasiTerakhir ?? '');
-  final kunjunganController = TextEditingController(text: anak?.kunjunganTerakhir ?? '');
+    showDialog(
+      context: context,
+      builder: (_) => StatefulBuilder(
+        builder: (context, setStateDialog) {
+          return AlertDialog(
+            title: Text(anak == null ? "Tambah Data Anak" : "Edit Data Anak"),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildTextField(namaController, 'Nama Anak'),
+                  GestureDetector(
+                    onTap: () async {
+                      DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: anak?.tanggalLahir != null
+                            ? DateTime.tryParse(anak!.tanggalLahir) ?? DateTime.now()
+                            : DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime.now(),
+                      );
 
-  showDialog(
-    context: context,
-    builder: (_) => StatefulBuilder(
-      builder: (context, setStateDialog) {
-        return AlertDialog(
-          title: Text(anak == null ? 'Tambah Data Anak' : 'Edit Data Anak'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildTextField(namaController, 'Nama Anak'),
-
-                // === Tanggal Lahir (pakai DatePicker) ===
-                GestureDetector(
-                  onTap: () async {
-                    FocusScope.of(context).unfocus();
-                    DateTime? pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: anak?.tanggalLahir != null
-                          ? DateTime.tryParse(anak!.tanggalLahir) ?? DateTime.now()
-                          : DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime.now(),
-                    );
-                    if (pickedDate != null) {
-                      String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
-                      setStateDialog(() {
-                        tanggalLahirController.text = formattedDate;
-                      });
-                    }
-                  },
-                  child: AbsorbPointer(
-                    child: _buildTextField(
-                      tanggalLahirController,
-                      'Tanggal Lahir',
-                    ),
-                  ),
-                ),
-
-                // === Dropdown Jenis Kelamin ===
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: DropdownButtonFormField<String>(
-                    value: selectedJenisKelamin,
-                    decoration: const InputDecoration(
-                      labelText: 'Jenis Kelamin',
-                      border: OutlineInputBorder(),
-                    ),
-                    items: const [
-                      DropdownMenuItem(value: 'L', child: Text('Laki-laki')),
-                      DropdownMenuItem(value: 'P', child: Text('Perempuan')),
-                    ],
-                    onChanged: (value) {
-                      setStateDialog(() {
-                        selectedJenisKelamin = value;
-                      });
+                      if (picked != null) {
+                        tanggalLahirController.text =
+                            DateFormat('yyyy-MM-dd').format(picked);
+                        setStateDialog(() {});
+                      }
                     },
+                    child: AbsorbPointer(
+                      child: _buildTextField(tanggalLahirController, 'Tanggal Lahir'),
+                    ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: DropdownButtonFormField<String>(
+                      value: selectedJenisKelamin,
+                      decoration: const InputDecoration(
+                        labelText: 'Jenis Kelamin',
+                        border: OutlineInputBorder(),
+                      ),
+                      items: const [
+                        DropdownMenuItem(
+                            value: 'Laki-laki', child: Text('Laki-laki')),
+                        DropdownMenuItem(
+                            value: 'Perempuan', child: Text('Perempuan')),
+                      ],
+                      onChanged: (value) {
+                        setStateDialog(() => selectedJenisKelamin = value);
+                      },
+                    ),
+                  ),
+                  _buildTextField(beratController, 'Berat Badan (kg)', keyboard: TextInputType.number),
+                  _buildTextField(tinggiController, 'Tinggi Badan (cm)', keyboard: TextInputType.number),
+                  _buildTextField(lingkarController, 'Lingkar Kepala (cm)', keyboard: TextInputType.number),
+                  _buildTextField(golController, 'Golongan Darah'),
+                  _buildTextField(imunController, 'Imunisasi Terakhir'),
+                  _buildTextField(kunjunganController, 'Kunjungan Terakhir'),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("Batal"),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  if (currentUid == null) return;
 
-                _buildTextField(beratController, 'Berat Badan (kg)', keyboard: TextInputType.number),
-                _buildTextField(tinggiController, 'Tinggi Badan (cm)', keyboard: TextInputType.number),
-                _buildTextField(lingkarController, 'Lingkar Kepala (cm)', keyboard: TextInputType.number),
-                _buildTextField(golonganController, 'Golongan Darah'),
-                _buildTextField(imunisasiController, 'Imunisasi Terakhir'),
-                _buildTextField(kunjunganController, 'Kunjungan Terakhir'),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Batal'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                final data = Anak(
+                  final uid = FirebaseAuth.instance.currentUser?.uid;
+
+                if (uid == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Gagal menyimpan: User tidak ditemukan")),
+                  );
+                  return;
+                }
+
+                final data = AnakFirebase(
                   id: anak?.id,
+                  userId: uid,
                   nama: namaController.text,
                   tanggalLahir: tanggalLahirController.text,
-                  jenisKelamin: selectedJenisKelamin ?? '',
+                  jenisKelamin: selectedJenisKelamin ?? 'Laki-laki',
                   beratBadan: double.tryParse(beratController.text) ?? 0,
                   tinggiBadan: double.tryParse(tinggiController.text) ?? 0,
                   lingkarKepala: double.tryParse(lingkarController.text) ?? 0,
-                  golonganDarah: golonganController.text,
-                  imunisasiTerakhir: imunisasiController.text,
+                  golonganDarah: golController.text,
+                  imunisasiTerakhir: imunController.text,
                   kunjunganTerakhir: kunjunganController.text,
                 );
 
-                if (anak == null) {
-                  final userId = await _getUserIdFromPrefs() ?? 1;
-                  await DbHelper.createAnak(data, userId);
-                } else {
-                  await DbHelper.updateAnak(data, anak.id!);
-                }
 
-                if (mounted) {
-                  Navigator.pop(context);
-                  _refreshData();
-                }
-              },
-              child: Text(anak == null ? 'Simpan' : 'Update'),
-            ),
-          ],
-        );
-      },
-    ),
-  );
-}
+                  if (anak == null) {
+                    await FirebaseAnakService.addAnak(data);
+                  } else {
+                    await FirebaseAnakService.updateAnak(data);
+                  }
 
+                  if (mounted) Navigator.pop(context);
+                },
+                child: Text(anak == null ? "Simpan" : "Update"),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
 
   Widget _buildTextField(TextEditingController c, String label,
       {TextInputType keyboard = TextInputType.text}) {
@@ -168,35 +161,44 @@ class _AnakPageState extends State<AnakPage> {
     );
   }
 
-  Future<void> _delete(int id) async {
-    await DbHelper.deleteAnak(id);
-    _refreshData();
+  Future<void> _delete(String id) async {
+    await FirebaseAnakService.deleteAnak(id);
+    setState(() {}); // refresh future
   }
 
   @override
   Widget build(BuildContext context) {
+    if (currentUid == null) {
+      return const Center(child: Text("User belum login"));
+    }
+
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Data Anak'),
-      //   backgroundColor: Colors.teal,
-      // ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.teal,
         onPressed: () => _showForm(),
         child: const Icon(Icons.add),
       ),
-      body: FutureBuilder<List<Anak>>(
-        future: _anakFuture,
+
+      // ==================================================
+      // === FUTUREBUILDER (Pengganti STREAMBUILDER) ===
+      // ==================================================
+      body: FutureBuilder<List<AnakFirebase>>(
+        future: FirebaseAnakService.getAnakByUserFuture(currentUid!),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Terjadi kesalahan: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('Belum ada data anak.'));
+          }
+
+          if (snapshot.hasError) {
+            return Center(child: Text("Error: ${snapshot.error}"));
+          }
+
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text("Belum ada data anak."));
           }
 
           final anakList = snapshot.data!;
+
           return ListView.builder(
             itemCount: anakList.length,
             itemBuilder: (context, index) {
@@ -207,7 +209,7 @@ class _AnakPageState extends State<AnakPage> {
                   title: Text(a.nama),
                   subtitle: Text(
                     'Usia: ${a.usiaString}\n'
-                      'Jenis Kelamin: ${a.jenisKelamin == 'L' ? 'Laki-laki' : 'Perempuan'}\n'
+                    'Jenis Kelamin: ${a.jenisKelamin}\n'
                     'BB: ${a.beratBadan} kg | TB: ${a.tinggiBadan} cm\n'
                     'Status Gizi: ${a.statusGizi}',
                   ),

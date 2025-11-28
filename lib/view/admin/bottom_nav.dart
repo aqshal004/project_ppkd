@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_ppkd/view/admin/anak_page.dart';
 import 'package:project_ppkd/view/admin/dashboard_admin.dart';
-import 'package:project_ppkd/view/admin/drawer.dart';
+import 'package:project_ppkd/view/admin/list_anak.dart';
 
 class BottomNav extends StatefulWidget {
   final int initialIndex;
@@ -18,7 +18,7 @@ class _BottomNavState extends State<BottomNav> {
   final List<Widget> _pages = const [
     DashboardAdminWidget(),
     Center(child: Text("Jadwal Posyandu")),
-    AnakPage(),
+    ListAnak(),
     Center(child: Text("Data Ibu Hamil")),
   ];
 
@@ -31,13 +31,13 @@ class _BottomNavState extends State<BottomNav> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const DrawerWidget(),
-      appBar: AppBar(
-        title: Text(_getTitle(_currentIndex)),
-        backgroundColor: Colors.teal.shade600,
-        foregroundColor: Colors.white,
-        elevation: 0,
-      ),
+      // Drawer dihapus
+      // appBar: AppBar(
+      //   title: Text(_getTitle(_currentIndex)),
+      //   backgroundColor: Colors.teal.shade600,
+      //   foregroundColor: Colors.white,
+      //   elevation: 0,
+      // ),
       body: IndexedStack(
         index: _currentIndex,
         children: _pages,
@@ -87,8 +87,7 @@ class _BottomNavState extends State<BottomNav> {
             ),
             BottomNavigationBarItem(
               icon: _buildIcon(Icons.pregnant_woman_outlined, 3),
-              activeIcon:
-                  _buildIcon(Icons.pregnant_woman, 3, active: true),
+              activeIcon: _buildIcon(Icons.pregnant_woman, 3, active: true),
               label: 'Ibu Hamil',
             ),
           ],
@@ -123,8 +122,6 @@ class _BottomNavState extends State<BottomNav> {
         return "Data Balita";
       case 3:
         return "Data Ibu Hamil";
-      case 4:
-        return "Pengaturan";
       default:
         return "Posyandu";
     }
