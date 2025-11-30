@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:project_ppkd/view/admin/anak_page.dart';
 import 'package:project_ppkd/view/admin/dashboard_admin.dart';
 import 'package:project_ppkd/view/admin/list_anak.dart';
+import 'package:project_ppkd/view/admin/list_jadwal.dart';
 
 class BottomNav extends StatefulWidget {
   final int initialIndex;
@@ -17,9 +17,9 @@ class _BottomNavState extends State<BottomNav> {
 
   final List<Widget> _pages = const [
     DashboardAdminWidget(),
-    Center(child: Text("Jadwal Posyandu")),
+    ListJadwalPage(),
     ListAnak(),
-    Center(child: Text("Data Ibu Hamil")),
+    // Center(child: Text("Data Ibu Hamil")),
   ];
 
   @override
@@ -85,11 +85,11 @@ class _BottomNavState extends State<BottomNav> {
               activeIcon: _buildIcon(Icons.child_care, 2, active: true),
               label: 'Balita',
             ),
-            BottomNavigationBarItem(
-              icon: _buildIcon(Icons.pregnant_woman_outlined, 3),
-              activeIcon: _buildIcon(Icons.pregnant_woman, 3, active: true),
-              label: 'Ibu Hamil',
-            ),
+            // BottomNavigationBarItem(
+            //   icon: _buildIcon(Icons.pregnant_woman_outlined, 3),
+            //   activeIcon: _buildIcon(Icons.pregnant_woman, 3, active: true),
+            //   label: 'Ibu Hamil',
+            // ),
           ],
         ),
       ),

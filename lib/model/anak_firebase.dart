@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class AnakFirebase {
   String? id;          // Firestore document ID
   String? userId;      // UID Firebase Auth
+  String? parentName;
+  String? parentId;
   final String nama;
   final String tanggalLahir;
   final String jenisKelamin;
@@ -16,6 +18,8 @@ class AnakFirebase {
   AnakFirebase({
     this.id,
     this.userId,
+    this.parentName,
+    this.parentId,
     required this.nama,
     required this.tanggalLahir,
     required this.jenisKelamin,
@@ -170,6 +174,8 @@ class AnakFirebase {
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,
+      'parentName': parentName,
+      'parentId': parentId,
       'nama': nama,
       'tanggalLahir': tanggalLahir,
       'jenisKelamin': jenisKelamin,
@@ -186,6 +192,8 @@ class AnakFirebase {
     return AnakFirebase(
       id: id,                 // gunakan Firestore doc.id
       userId: map['userId'],
+      parentName: map['parentName'],
+      parentId: map['parentId'],
       nama: map['nama'],
       tanggalLahir: map['tanggalLahir'],
       jenisKelamin: map['jenisKelamin'],

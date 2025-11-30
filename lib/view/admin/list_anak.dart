@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:project_ppkd/model/anak_firebase.dart';
 import 'package:project_ppkd/service/firebase_anak.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:project_ppkd/view/admin/bottom_nav.dart';
+import 'package:project_ppkd/view/admin/dashboard_admin.dart';
 import 'package:project_ppkd/view/admin/tambah_anak.dart';
 
 class ListAnak extends StatefulWidget {
@@ -81,8 +83,9 @@ class _ListAnakState extends State<ListAnak> {
 
   List<AnakFirebase> _filterData(List<AnakFirebase> anakList) {
     return anakList.where((anak) {
-      // Filter by search query
-      bool matchesSearch = anak.nama.toLowerCase().contains(_searchQuery.toLowerCase());
+      // Filter by search query (cari nama anak atau nama orang tua)
+      bool matchesSearch = anak.nama.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+          (anak.parentName?.toLowerCase().contains(_searchQuery.toLowerCase()) ?? false);
       
       // Filter by gender
       bool matchesGender = _selectedFilter == 'Semua' ||
@@ -129,8 +132,14 @@ class _ListAnakState extends State<ListAnak> {
                     // Title Row
                     Row(
                       children: [
-                        IconButton(
-                          onPressed: () => Navigator.pop(context),
+                       IconButton(
+                          onPressed: () {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (_) => const BottomNav()), 
+                              (route) => false,
+                            );
+                          },
                           icon: const Icon(Icons.arrow_back, color: Colors.white),
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
@@ -138,7 +147,8 @@ class _ListAnakState extends State<ListAnak> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: FutureBuilder<List<AnakFirebase>>(
-                            future: FirebaseAnakService.getAnakByUserFuture(currentUid!),
+                            // PERBAIKAN: Ambil SEMUA data anak, bukan berdasarkan UID admin
+                            future: FirebaseAnakService.getAllAnak(),
                             builder: (context, snapshot) {
                               final count = snapshot.hasData ? snapshot.data!.length : 0;
                               return Column(
@@ -223,7 +233,8 @@ class _ListAnakState extends State<ListAnak> {
           // Content Section
           Expanded(
             child: FutureBuilder<List<AnakFirebase>>(
-              future: FirebaseAnakService.getAnakByUserFuture(currentUid!),
+              // PERBAIKAN: Ambil SEMUA data anak untuk admin
+              future: FirebaseAnakService.getAllAnak(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -528,7 +539,33 @@ class _ListAnakState extends State<ListAnak> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
+                
+                // Info Orang Tua
+                Row(
+                  children: [
+                    Icon(Icons.person, size: 16, color: Colors.grey[600]),
+                    const SizedBox(width: 6),
+                    Text(
+                      "Orang Tua: ",
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        anak.parentName ?? '-',
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
                 
                 // Divider
                 Divider(color: Colors.grey[300]),

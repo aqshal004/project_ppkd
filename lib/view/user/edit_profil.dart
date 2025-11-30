@@ -83,6 +83,9 @@ class _EditProfilPageState extends State<EditProfilPage> {
       appBar: AppBar(
         title: const Text('Edit Profil',style: TextStyle(color: Colors.white),),
         backgroundColor: Colors.teal.shade600,
+        iconTheme: const IconThemeData(
+        color: Colors.white,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),

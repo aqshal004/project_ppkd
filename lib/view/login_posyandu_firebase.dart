@@ -160,110 +160,108 @@ class _LoginPosyanduFirebaseState extends State<LoginPosyanduFirebase> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Social Login Buttons
-                            Row(
-                              children: [
-                                // Google Button
-                                Expanded(
-                                  child: OutlinedButton(
-                                    onPressed: () {},
-                                    style: OutlinedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 16),
-                                      side: BorderSide(color: Colors.grey.shade300),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Image.asset(
-                                          'assets/images/google.png',
-                                          width: 20,
-                                          height: 20,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        const Text(
-                                          'Google',
-                                          style: TextStyle(
-                                            color: Colors.black87,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                // Facebook Button
-                                Expanded(
-                                  child: OutlinedButton(
-                                    onPressed: () {},
-                                    style: OutlinedButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(vertical: 16),
-                                      side: BorderSide(color: Colors.grey.shade300),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Image.asset(  
-                                          'assets/images/facebook.png',
-                                          width: 20,
-                                          height: 20,
-                                        ),
-                                        const SizedBox(width: 8),
-                                        const Text(
-                                          'Facebook',
-                                          style: TextStyle(
-                                            color: Colors.black87,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            // // Social Login Buttons
+                            // Row(
+                            //   children: [
+                            //     // Google Button
+                            //     Expanded(
+                            //       child: OutlinedButton(
+                            //         onPressed: () {},
+                            //         style: OutlinedButton.styleFrom(
+                            //           padding: const EdgeInsets.symmetric(vertical: 16),
+                            //           side: BorderSide(color: Colors.grey.shade300),
+                            //           shape: RoundedRectangleBorder(
+                            //             borderRadius: BorderRadius.circular(8),
+                            //           ),
+                            //         ),
+                            //         child: Row(
+                            //           mainAxisAlignment: MainAxisAlignment.center,
+                            //           children: [
+                            //             Image.asset(
+                            //               'assets/images/google.png',
+                            //               width: 20,
+                            //               height: 20,
+                            //             ),
+                            //             const SizedBox(width: 8),
+                            //             const Text(
+                            //               'Google',
+                            //               style: TextStyle(
+                            //                 color: Colors.black87,
+                            //                 fontSize: 14,
+                            //                 fontWeight: FontWeight.w600,
+                            //               ),
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     const SizedBox(width: 12),
+                            //     // Facebook Button
+                            //     Expanded(
+                            //       child: OutlinedButton(
+                            //         onPressed: () {},
+                            //         style: OutlinedButton.styleFrom(
+                            //           padding: const EdgeInsets.symmetric(vertical: 16),
+                            //           side: BorderSide(color: Colors.grey.shade300),
+                            //           shape: RoundedRectangleBorder(
+                            //             borderRadius: BorderRadius.circular(8),
+                            //           ),
+                            //         ),
+                            //         child: Row(
+                            //           mainAxisAlignment: MainAxisAlignment.center,
+                            //           children: [
+                            //             Image.asset(  
+                            //               'assets/images/facebook.png',
+                            //               width: 20,
+                            //               height: 20,
+                            //             ),
+                            //             const SizedBox(width: 8),
+                            //             const Text(
+                            //               'Facebook',
+                            //               style: TextStyle(
+                            //                 color: Colors.black87,
+                            //                 fontSize: 14,
+                            //                 fontWeight: FontWeight.w600,
+                            //               ),
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
 
-                            const SizedBox(height: 24),
+                            // const SizedBox(height: 24),
 
-                            // Divider with text
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Divider(
-                                    color: Colors.grey[300],
-                                    thickness: 1,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                                  child: Text(
-                                    'Atau masuk dengan',
-                                    style: TextStyle(
-                                      color: Colors.grey[600],
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Divider(
-                                    color: Colors.grey[300],
-                                    thickness: 1,
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(height: 24),
-
+                            // // Divider with text
+                            // Row(
+                            //   children: [
+                            //     Expanded(
+                            //       child: Divider(
+                            //         color: Colors.grey[300],
+                            //         thickness: 1,
+                            //       ),
+                            //     ),
+                            //     Padding(
+                            //       padding: const EdgeInsets.symmetric(horizontal: 16),
+                            //       child: Text(
+                            //         'Atau masuk dengan',
+                            //         style: TextStyle(
+                            //           color: Colors.grey[600],
+                            //           fontSize: 13,
+                            //           fontWeight: FontWeight.w500,
+                            //         ),
+                            //       ),
+                            //     ),
+                            //     Expanded(
+                            //       child: Divider(
+                            //         color: Colors.grey[300],
+                            //         thickness: 1,
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
+                            // const SizedBox(height: 24),
                             // Email Label & Field
                             Text(
                               "Email",

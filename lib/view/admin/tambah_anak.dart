@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:project_ppkd/model/anak_firebase.dart';
+import 'package:project_ppkd/model/user_firebase.dart';
+import 'package:project_ppkd/service/firebase.dart';
 import 'package:project_ppkd/service/firebase_anak.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class TambahDataAnak extends StatefulWidget {
   final AnakFirebase? anak;
@@ -25,6 +26,11 @@ class _TambahDataAnakState extends State<TambahDataAnak> {
   String? _selectedJenisKelamin;
   String? _selectedGolonganDarah;
 
+String? _selectedParentId;
+String? _selectedParentName;
+
+
+
   @override
   void initState() {
     super.initState();
@@ -40,6 +46,9 @@ class _TambahDataAnakState extends State<TambahDataAnak> {
           : null;
       _imunController.text = widget.anak!.imunisasiTerakhir;
       _kunjunganController.text = widget.anak!.kunjunganTerakhir;
+   _selectedParentId = widget.anak!.parentId;
+  _selectedParentName = widget.anak!.parentName;
+
     }
   }
 
@@ -71,37 +80,39 @@ class _TambahDataAnakState extends State<TambahDataAnak> {
       });
     }
   }
+
   Future<void> _selectImunisasiDate() async {
-  DateTime? picked = await showDatePicker(
-    context: context,
-    initialDate: DateTime.now(),
-    firstDate: DateTime(2000),
-    lastDate: DateTime.now(),
-  );
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+    );
 
-  if (picked != null) {
-    setState(() {
-      _imunController.text = DateFormat('yyyy-MM-dd').format(picked);
-    });
+    if (picked != null) {
+      setState(() {
+        _imunController.text = DateFormat('yyyy-MM-dd').format(picked);
+      });
+    }
   }
-}
 
-Future<void> _selectKunjunganDate() async {
-  DateTime? picked = await showDatePicker(
-    context: context,
-    initialDate: DateTime.now(),
-    firstDate: DateTime(2000),
-    lastDate: DateTime.now(),
-  );
+  Future<void> _selectKunjunganDate() async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+    );
 
-  if (picked != null) {
-    setState(() {
-      _kunjunganController.text = DateFormat('yyyy-MM-dd').format(picked);
-    });
+    if (picked != null) {
+      setState(() {
+        _kunjunganController.text = DateFormat('yyyy-MM-dd').format(picked);
+      });
+    }
   }
-}
 
   Future<void> _simpanData() async {
+    // Validasi input wajib
     if (_namaController.text.isEmpty ||
         _tanggalLahirController.text.isEmpty ||
         _selectedJenisKelamin == null) {
@@ -114,27 +125,34 @@ Future<void> _selectKunjunganDate() async {
       return;
     }
 
-    final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Gagal menyimpan: User tidak ditemukan")),
-      );
-      return;
-    }
+if (_selectedParentId == null) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(
+      content: Text("Mohon pilih orang tua terlebih dahulu"),
+      backgroundColor: Colors.red,
+    ),
+  );
+  return;
+}
 
+
+    // PERBAIKAN: Gunakan UID orang tua yang dipilih, BUKAN UID admin yang login
     final data = AnakFirebase(
-      id: widget.anak?.id,
-      userId: uid,
-      nama: _namaController.text,
-      tanggalLahir: _tanggalLahirController.text,
-      jenisKelamin: _selectedJenisKelamin ?? 'Laki-laki',
-      beratBadan: double.tryParse(_beratController.text) ?? 0,
-      tinggiBadan: double.tryParse(_tinggiController.text) ?? 0,
-      lingkarKepala: double.tryParse(_lingkarController.text) ?? 0,
-      golonganDarah: _selectedGolonganDarah ?? '',
-      imunisasiTerakhir: _imunController.text,
-      kunjunganTerakhir: _kunjunganController.text,
-    );
+  id: widget.anak?.id,
+   userId: _selectedParentId,       // INI WAJIB STRING
+  parentId: _selectedParentId,
+  parentName: _selectedParentName ?? '',
+  nama: _namaController.text,
+  tanggalLahir: _tanggalLahirController.text,
+  jenisKelamin: _selectedJenisKelamin ?? 'Laki-laki',
+  beratBadan: double.tryParse(_beratController.text) ?? 0,
+  tinggiBadan: double.tryParse(_tinggiController.text) ?? 0,
+  lingkarKepala: double.tryParse(_lingkarController.text) ?? 0,
+  golonganDarah: _selectedGolonganDarah ?? '',
+  imunisasiTerakhir: _imunController.text,
+  kunjunganTerakhir: _kunjunganController.text,
+);
+
 
     try {
       bool success;
@@ -264,9 +282,94 @@ Future<void> _selectKunjunganDate() async {
                   ),
                   const SizedBox(height: 24),
 
+                  // Dropdown Orang Tua
+                  const Text(
+                    "Pilih Orang Tua *",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  FutureBuilder<List<UserFirebaseModel>>(
+                    future: FirebaseService.getAllOrangTua(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey[300]!),
+                          ),
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
+
+                      if (snapshot.hasError) {
+                        return Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.red[50],
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.red[300]!),
+                          ),
+                          child: Text(
+                            'Error: ${snapshot.error}',
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        );
+                      }
+
+                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.orange[50],
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.orange[300]!),
+                          ),
+                          child: const Text(
+                            'Belum ada data orang tua terdaftar',
+                            style: TextStyle(color: Colors.orange),
+                          ),
+                        );
+                      }
+
+                      final listOrtu = snapshot.data!;
+                      return DropdownButtonFormField<String>(
+                        value: _selectedParentId,
+                        items: listOrtu.map((ortu) {
+                          return DropdownMenuItem(
+                            value: ortu.uid,     // hanya UID!!
+                            child: Text(ortu.username ?? 'Tanpa nama'),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedParentId = value;
+                            _selectedParentName = listOrtu
+                                .firstWhere((e) => e.uid == value)
+                                .username;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Pilih Orang Tua",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      );  
+                    },
+                  ),
+                  const SizedBox(height: 20),
+
                   // Nama Lengkap Balita
                   const Text(
-                    'Nama Lengkap Balita',
+                    'Nama Lengkap Balita *',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -300,7 +403,7 @@ Future<void> _selectKunjunganDate() async {
 
                   // Jenis Kelamin
                   const Text(
-                    'Jenis Kelamin',
+                    'Jenis Kelamin *',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
@@ -387,7 +490,7 @@ Future<void> _selectKunjunganDate() async {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              'Tanggal Lahir',
+                              'Tanggal Lahir *',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -559,7 +662,7 @@ Future<void> _selectKunjunganDate() async {
                   ),
                   const SizedBox(height: 20),
 
-                  // Imunisasi dan Kunjungan
+                  // Data Tambahan
                   const Text(
                     'Data Tambahan (Opsional)',
                     style: TextStyle(
@@ -570,65 +673,62 @@ Future<void> _selectKunjunganDate() async {
                   ),
                   const SizedBox(height: 12),
 
-                 GestureDetector(
-  onTap: _selectImunisasiDate,
-  child: AbsorbPointer(
-    child: TextField(
-      controller: _imunController,
-      decoration: InputDecoration(
-        labelText: 'Imunisasi Terakhir',
-        prefixIcon: const Icon(Icons.calendar_today, color: Color(0xFF00BFA5)),
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey[300]!),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey[300]!),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF00BFA5), width: 2),
-        ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      ),
-    ),
-  ),
-),
-
+                  GestureDetector(
+                    onTap: _selectImunisasiDate,
+                    child: AbsorbPointer(
+                      child: TextField(
+                        controller: _imunController,
+                        decoration: InputDecoration(
+                          labelText: 'Imunisasi Terakhir',
+                          prefixIcon: const Icon(Icons.calendar_today, color: Color(0xFF00BFA5)),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Color(0xFF00BFA5), width: 2),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                        ),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 12),
 
                   GestureDetector(
-  onTap: _selectKunjunganDate,
-  child: AbsorbPointer(
-    child: TextField(
-      controller: _kunjunganController,
-      decoration: InputDecoration(
-        labelText: 'Kunjungan Terakhir',
-        prefixIcon: const Icon(Icons.calendar_today, color: Color(0xFF00BFA5)),
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey[300]!),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey[300]!),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF00BFA5), width: 2),
-        ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      ),
-    ),
-  ),
-),
-
-
+                    onTap: _selectKunjunganDate,
+                    child: AbsorbPointer(
+                      child: TextField(
+                        controller: _kunjunganController,
+                        decoration: InputDecoration(
+                          labelText: 'Kunjungan Terakhir',
+                          prefixIcon: const Icon(Icons.calendar_today, color: Color(0xFF00BFA5)),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(color: Color(0xFF00BFA5), width: 2),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                        ),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 32),
 
                   // Tombol Simpan

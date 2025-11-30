@@ -7,7 +7,8 @@ class RiwayatUser extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Riwayat Kunjungan'),
+        automaticallyImplyLeading: false,
+        title: const Text('Riwayat Kunjungan', style: TextStyle(color: Colors.white),),
         backgroundColor: Colors.teal.shade600,
         elevation: 0,
       ),

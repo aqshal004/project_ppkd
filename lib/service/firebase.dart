@@ -132,4 +132,15 @@ class FirebaseService {
       print("Gagal membuat admin default: $e");
     }
   }
+  static Future<List<UserFirebaseModel>> getAllOrangTua() async {
+  final snapshot = await firestore
+      .collection('users')
+      .where('role', isEqualTo: 'user')
+      .get();
+
+  return snapshot.docs.map((d) {
+    return UserFirebaseModel.fromMap(d.data());
+  }).toList();
+}
+
 }

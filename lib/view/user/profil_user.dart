@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project_ppkd/preferences/preferences_handler.dart';
+import 'package:project_ppkd/service/firebase_anak.dart';
+import 'package:project_ppkd/view/user/bottom_user.dart';
 import 'package:project_ppkd/view/user/edit_profil.dart';
 
 class ProfilUser extends StatefulWidget {
@@ -15,6 +18,7 @@ class _ProfilUserState extends State<ProfilUser> {
   String userNomorHp = '';
   String userAlamat = '';
   String userStatus = '';
+  int jumlahAnak = 0;
 
   @override
   void initState() {
@@ -25,12 +29,18 @@ class _ProfilUserState extends State<ProfilUser> {
   Future<void> loadUserData() async {
     final userData = await PreferencesHandler.getUserData();
     final prefs = await PreferencesHandler.getPrefs();
+    final userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+
+    
+  // Ambil data anak dari Firestore
+  final anakList = await FirebaseAnakService.getAnakByUserFuture(userId);
     setState(() {
       userName = userData['name'] ?? '';
       userEmail = userData['email'] ?? '';
       userNomorHp = prefs.getString('userNomorHp') ?? '';
       userAlamat = prefs.getString('userAlamat') ?? '';
       userStatus = prefs.getString('userStatus') ?? '';
+      jumlahAnak = anakList.length; // ← SET JUMLAH ANAK
     });
   }
 
@@ -38,10 +48,25 @@ class _ProfilUserState extends State<ProfilUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profil', style: TextStyle(color: Colors.white),),
-        backgroundColor: Colors.teal.shade600,
-        elevation: 2,
-        actions: [
+  leading: IconButton(
+    icon: const Icon(Icons.arrow_back, color: Colors.white),
+    onPressed: () {
+ Navigator.pushAndRemoveUntil(
+  context,
+  MaterialPageRoute(builder: (_) => const BottomNavUser()),
+  (route) => false,
+);
+},
+
+  ),
+  title: const Text(
+    'Profil',
+    style: TextStyle(color: Colors.white),
+  ),
+  backgroundColor: Colors.teal.shade600,
+  elevation: 2,
+  iconTheme: const IconThemeData(color: Colors.white),
+  actions: [
           IconButton(
             icon: const Icon(Icons.edit, color: Colors.white,),
             onPressed: () async {
@@ -69,7 +94,8 @@ class _ProfilUserState extends State<ProfilUser> {
             },
           ),
         ],
-      ),
+),
+
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -143,7 +169,7 @@ class _ProfilUserState extends State<ProfilUser> {
                   _buildInfoCard(
                     icon: Icons.child_care,
                     title: 'Jumlah Anak',
-                    value: '2 Anak',
+                    value: '$jumlahAnak Anak',
                   ),
                   const SizedBox(height: 24),
                   _buildMenuButton(

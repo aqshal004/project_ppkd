@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:project_ppkd/model/anak_firebase.dart';
+import 'package:project_ppkd/service/firebase_anak.dart';
+import 'package:project_ppkd/view/admin/input_jadwal.dart';
 import 'package:project_ppkd/view/admin/tambah_anak.dart';
 
 
@@ -111,7 +115,7 @@ class DashboardAdminWidget extends StatelessWidget {
                         await FirebaseAuth.instance.signOut();
                         Navigator.of(context).pushReplacementNamed('/login');
                       },
-                      child: const Text("Logout"),
+                      child: const Text("Logout", style: TextStyle(color: Colors.white),),
                     ),
                   ],
                 );
@@ -139,9 +143,17 @@ class DashboardAdminWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
+            StreamBuilder<List<AnakFirebase>>(
+            stream: FirebaseAnakService.getAllAnakStream(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
+          final dataAnak = snapshot.data!;
+          final totalBalita = dataAnak.length;
             // Statistics Grid
-            GridView.count(
+             return GridView.count(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               crossAxisCount: 2,
@@ -152,19 +164,39 @@ class DashboardAdminWidget extends StatelessWidget {
                 _buildStatCard(
                   icon: Icons.child_care,
                   title: 'Total Balita',
-                  value: '145',
+                  value: totalBalita.toString(),
                   subtitle: '+5 bulan ini',
                   color: Colors.blue,
                   gradientColors: [Colors.blue, Colors.lightBlue],
                 ),
-                _buildStatCard(
-                  icon: Icons.pregnant_woman,
-                  title: 'Ibu Hamil',
-                  value: '32',
-                  subtitle: '+3 bulan ini',
-                  color: Colors.purple,
-                  gradientColors: [Colors.purple, Colors.purpleAccent],
-                ),
+               StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('jadwal_posyandu')
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return _buildStatCard(
+            icon: Icons.calendar_today,
+            title: 'Total Jadwal',
+            value: '0',
+            subtitle: 'Memuat...',
+            color: Colors.purple,
+            gradientColors: [Colors.purple, Colors.purpleAccent],
+          );
+        }
+
+        final totalJadwal = snapshot.data!.docs.length;
+
+        return _buildStatCard(
+          icon: Icons.calendar_today,
+          title: 'Total Jadwal',
+          value: totalJadwal.toString(),
+          subtitle: 'Jadwal terdaftar',
+          color: Colors.purple,
+          gradientColors: [Colors.purple, Colors.purpleAccent],
+        );
+      },
+    ),
                 _buildStatCard(
                   icon: Icons.vaccines,
                   title: 'Imunisasi',
@@ -180,8 +212,10 @@ class DashboardAdminWidget extends StatelessWidget {
                   subtitle: 'Bulan ini',
                   color: Colors.orange,
                   gradientColors: [Colors.orange, Colors.orangeAccent],
-                ),
-              ],
+                    ),
+                  ],
+                );
+              },
             ),
 
             const SizedBox(height: 24),
@@ -216,9 +250,14 @@ class DashboardAdminWidget extends StatelessWidget {
                 Expanded(
                   child: _buildQuickActionCard(
                     icon: Icons.calendar_month,
-                    title: 'Lihat Jadwal',
+                    title: 'Input Jadwal',
                     color: Colors.pink,
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const BuatJadwalPosyanduPage()),
+                    );
+                    },
                   ),
                 ),
               ],
@@ -301,35 +340,35 @@ class DashboardAdminWidget extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // Alerts Section
-            const Text(
-              'Peringatan',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 12),
+            // // Alerts Section
+            // const Text(
+            //   'Peringatan',
+            //   style: TextStyle(
+            //     fontSize: 20,
+            //     fontWeight: FontWeight.bold,
+            //     color: Colors.black87,
+            //   ),
+            // ),
+            // const SizedBox(height: 12),
 
-            _buildAlertCard(
-              icon: Icons.warning_amber_rounded,
-              title: '8 Balita perlu imunisasi minggu ini',
-              color: Colors.orange,
-              onTap: () {},
-            ),
-            _buildAlertCard(
-              icon: Icons.medical_services,
-              title: '5 Ibu hamil jadwal kontrol bulan ini',
-              color: Colors.red,
-              onTap: () {},
-            ),
-            _buildAlertCard(
-              icon: Icons.inventory_2,
-              title: 'Stok vitamin A menipis',
-              color: Colors.blue,
-              onTap: () {},
-            ),
+            // _buildAlertCard(
+            //   icon: Icons.warning_amber_rounded,
+            //   title: '8 Balita perlu imunisasi minggu ini',
+            //   color: Colors.orange,
+            //   onTap: () {},
+            // ),
+            // _buildAlertCard(
+            //   icon: Icons.medical_services,
+            //   title: '5 Ibu hamil jadwal kontrol bulan ini',
+            //   color: Colors.red,
+            //   onTap: () {},
+            // ),
+            // _buildAlertCard(
+            //   icon: Icons.inventory_2,
+            //   title: 'Stok vitamin A menipis',
+            //   color: Colors.blue,
+            //   onTap: () {},
+            // ),
           ],
         ),
       ),

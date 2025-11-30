@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,18 +15,26 @@ class DataAnakPage extends StatefulWidget {
 
 class _DataAnakPageState extends State<DataAnakPage> {
   String? uid;
+   StreamSubscription<User?>? _authSub;
 
   @override
-void initState() {
-  super.initState();
+  void initState() {
+    super.initState();
 
-  FirebaseAuth.instance.authStateChanges().listen((user) {
-    setState(() {
-      uid = user?.uid;
-      print("Current UID: $uid");
+    _authSub = FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (!mounted) return; // amanin
+      setState(() {
+        uid = user?.uid;
+        print("Current UID: $uid");
+      });
     });
-  });
-}
+  }
+
+    @override
+  void dispose() {
+    _authSub?.cancel(); // WAJIB! Agar tidak memory leak
+    super.dispose();
+  }
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -43,10 +53,13 @@ void initState() {
       appBar: AppBar(
         title: const Text(
           'Data Anak Saya',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         backgroundColor: Colors.teal.shade600,
         elevation: 0,
+         iconTheme: const IconThemeData(
+        color: Colors.white,
+        ),
       ),
 
       // ============================
