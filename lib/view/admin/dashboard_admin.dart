@@ -197,22 +197,22 @@ class DashboardAdminWidget extends StatelessWidget {
         );
       },
     ),
-                _buildStatCard(
-                  icon: Icons.vaccines,
-                  title: 'Imunisasi',
-                  value: '87',
-                  subtitle: 'Bulan ini',
-                  color: Colors.green,
-                  gradientColors: [Colors.green, Colors.lightGreen],
-                ),
-                _buildStatCard(
-                  icon: Icons.monitor_weight,
-                  title: 'Penimbangan',
-                  value: '124',
-                  subtitle: 'Bulan ini',
-                  color: Colors.orange,
-                  gradientColors: [Colors.orange, Colors.orangeAccent],
-                    ),
+                // _buildStatCard(
+                //   icon: Icons.vaccines,
+                //   title: 'Imunisasi',
+                //   value: '87',
+                //   subtitle: 'Bulan ini',
+                //   color: Colors.green,
+                //   gradientColors: [Colors.green, Colors.lightGreen],
+                // ),
+                // _buildStatCard(
+                //   icon: Icons.monitor_weight,
+                //   title: 'Penimbangan',
+                //   value: '124',
+                //   subtitle: 'Bulan ini',
+                //   color: Colors.orange,
+                //   gradientColors: [Colors.orange, Colors.orangeAccent],
+                //     ),
                   ],
                 );
               },
@@ -265,27 +265,27 @@ class DashboardAdminWidget extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            Row(
-              children: [
-                Expanded(
-                  child: _buildQuickActionCard(
-                    icon: Icons.vaccines,
-                    title: 'Catat Imunisasi',
-                    color: Colors.green,
-                    onTap: () {},
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildQuickActionCard(
-                    icon: Icons.description,
-                    title: 'Buat Laporan',
-                    color: Colors.orange,
-                    onTap: () {},
-                  ),
-                ),
-              ],
-            ),
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child: _buildQuickActionCard(
+            //         icon: Icons.vaccines,
+            //         title: 'Catat Imunisasi',
+            //         color: Colors.green,
+            //         onTap: () {},
+            //       ),
+            //     ),
+            //     const SizedBox(width: 12),
+            //     Expanded(
+            //       child: _buildQuickActionCard(
+            //         icon: Icons.description,
+            //         title: 'Buat Laporan',
+            //         color: Colors.orange,
+            //         onTap: () {},
+            //       ),
+            //     ),
+            //   ],
+            // ),
 
             const SizedBox(height: 24),
 

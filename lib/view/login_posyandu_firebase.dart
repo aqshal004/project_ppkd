@@ -356,72 +356,72 @@ class _LoginPosyanduFirebaseState extends State<LoginPosyanduFirebase> {
                             const SizedBox(height: 16),
 
                             // Remember me and Forgot password
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      _rememberMe = !_rememberMe;
-                                    });
-                                  },
-                                  borderRadius: BorderRadius.circular(4),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        width: 20,
-                                        height: 20,
-                                        decoration: BoxDecoration(
-                                          color: _rememberMe
-                                              ? Colors.teal.shade600
-                                              : Colors.transparent,
-                                          border: Border.all(
-                                            color: _rememberMe
-                                                ? Colors.teal.shade600
-                                                : Colors.grey.shade400,
-                                            width: 2,
-                                          ),
-                                          borderRadius: BorderRadius.circular(4),
-                                        ),
-                                        child: _rememberMe
-                                            ? const Icon(
-                                                Icons.check,
-                                                size: 14,
-                                                color: Colors.white,
-                                              )
-                                            : null,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        'Ingat Saya',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey[700],
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {},
-                                  style: TextButton.styleFrom(
-                                    padding: EdgeInsets.zero,
-                                    minimumSize: Size.zero,
-                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                  child: Text(
-                                    'Lupa Password?',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.teal.shade600,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //   children: [
+                            //     InkWell(
+                            //       onTap: () {
+                            //         setState(() {
+                            //           _rememberMe = !_rememberMe;
+                            //         });
+                            //       },
+                            //       borderRadius: BorderRadius.circular(4),
+                            //       child: Row(
+                            //         mainAxisSize: MainAxisSize.min,
+                            //         children: [
+                            //           Container(
+                            //             width: 20,
+                            //             height: 20,
+                            //             decoration: BoxDecoration(
+                            //               color: _rememberMe
+                            //                   ? Colors.teal.shade600
+                            //                   : Colors.transparent,
+                            //               border: Border.all(
+                            //                 color: _rememberMe
+                            //                     ? Colors.teal.shade600
+                            //                     : Colors.grey.shade400,
+                            //                 width: 2,
+                            //               ),
+                            //               borderRadius: BorderRadius.circular(4),
+                            //             ),
+                            //             child: _rememberMe
+                            //                 ? const Icon(
+                            //                     Icons.check,
+                            //                     size: 14,
+                            //                     color: Colors.white,
+                            //                   )
+                            //                 : null,
+                            //           ),
+                            //           const SizedBox(width: 8),
+                            //           Text(
+                            //             'Ingat Saya',
+                            //             style: TextStyle(
+                            //               fontSize: 14,
+                            //               color: Colors.grey[700],
+                            //               fontWeight: FontWeight.w500,
+                            //             ),
+                            //           ),
+                            //         ],
+                            //       ),
+                            //     ),
+                            //     TextButton(
+                            //       onPressed: () {},
+                            //       style: TextButton.styleFrom(
+                            //         padding: EdgeInsets.zero,
+                            //         minimumSize: Size.zero,
+                            //         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            //       ),
+                            //       child: Text(
+                            //         'Lupa Password?',
+                            //         style: TextStyle(
+                            //           fontSize: 14,
+                            //           color: Colors.teal.shade600,
+                            //           fontWeight: FontWeight.w600,
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
 
                             const SizedBox(height: 28),
 
