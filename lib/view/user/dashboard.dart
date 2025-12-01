@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:project_ppkd/preferences/preferences_handler.dart';
+import 'package:project_ppkd/view/user/artikel.dart';
+import 'package:project_ppkd/view/user/jadwal_user.dart';
 import 'package:project_ppkd/view/user/page/data_anak.dart';
 import 'package:project_ppkd/main.dart';
+import 'package:project_ppkd/view/user/panduan_gizi.dart';
 
 
 class DashboardWidget extends StatefulWidget {
@@ -208,31 +211,55 @@ void didPopNext() {
                           title: 'Imunisasi',
                           subtitle: 'Jadwal & riwayat',
                           color: Colors.purple.shade400,
+                          onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const JadwalPage(),
+                            ),
+                          );
+                        },
                         ),
                         _buildMenuCard(
                           icon: Icons.restaurant,
                           title: 'Gizi',
                           subtitle: 'Panduan nutrisi',
                           color: Colors.orange.shade400,
+                          onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PanduanGiziPage(),
+                            ),
+                          );
+                        },
                         ),
-                        _buildMenuCard(
-                          icon: Icons.show_chart,
-                          title: 'Grafik Pertumbuhan',
-                          subtitle: 'Lihat perkembangan',
-                          color: Colors.green.shade400,
-                        ),
+                        // _buildMenuCard(
+                        //   icon: Icons.show_chart,
+                        //   title: 'Grafik Pertumbuhan',
+                        //   subtitle: 'Lihat perkembangan',
+                        //   color: Colors.green.shade400,
+                        // ),
                         _buildMenuCard(
                           icon: Icons.article,
                           title: 'Artikel',
                           subtitle: 'Tips kesehatan',
                           color: Colors.pink.shade400,
+                          onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ArtikelPage(),
+                            ),
+                          );
+                        },
                         ),
-                        _buildMenuCard(
-                          icon: Icons.notifications_active,
-                          title: 'Pengingat',
-                          subtitle: 'Notifikasi jadwal',
-                          color: Colors.red.shade400,
-                        ),
+                        // _buildMenuCard(
+                        //   icon: Icons.notifications_active,
+                        //   title: 'Pengingat',
+                        //   subtitle: 'Notifikasi jadwal',
+                        //   color: Colors.red.shade400,
+                        // ),
                       ],
                     ),
                   ],
@@ -258,14 +285,22 @@ void didPopNext() {
                             color: Color(0xFF2D3748),
                           ),
                         ),
-                        Text(
-                          'Lihat Semua',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.teal.shade600,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        GestureDetector(
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ArtikelPage()),
+    );
+  },
+    child: Text(
+    'Lihat Semua',
+    style: TextStyle(
+      fontSize: 14,
+      color: Colors.teal.shade600,
+      fontWeight: FontWeight.w600,
+    ),
+  ),
+),
                       ],
                     ),
                     const SizedBox(height: 16),

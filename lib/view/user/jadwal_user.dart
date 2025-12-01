@@ -8,13 +8,16 @@ class JadwalPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        // automaticallyImplyLeading: false,
         title: const Text(
           'Jadwal Posyandu',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.teal.shade600,
         elevation: 0,
+         iconTheme: const IconThemeData(
+        color: Colors.white,
+        ),
       ),
 
       body: StreamBuilder<QuerySnapshot>(
